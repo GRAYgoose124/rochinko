@@ -1,6 +1,8 @@
 import json
 import os
 
+import arcade
+
 
 if os.path.exists("rochinko-config.json"):
     with open("rochinko-config.json", "r") as f:
@@ -29,6 +31,22 @@ class Settings:
     BOUNCE_DAMPING = config["BOUNCE_DAMPING"]
     SHOOTER_Y = config["SHOOTER_Y"]
     INITIAL_BALL_SPEED = config["INITIAL_BALL_SPEED"]
+
+    PALETTE = [
+        arcade.color.WHITE_SMOKE,
+        arcade.color.RED,
+        arcade.color.GREEN,
+        arcade.color.BLUE,
+        arcade.color.YELLOW,
+        arcade.color.ORANGE,
+        arcade.color.PURPLE,
+        arcade.color.PINK,
+        arcade.color.GRAY,
+        arcade.color.BROWN,
+        arcade.color.LIME,
+        arcade.color.MAROON,
+        arcade.color.OLIVE,
+    ]
 
 
 __all__ = [
