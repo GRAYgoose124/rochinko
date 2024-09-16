@@ -7,7 +7,7 @@ from pyglet.graphics import Batch
 from .settings import Settings
 from .level_builder import LevelBuilder
 from .draw_helpers import draw_ball_path_preview
-from .lib import Ball, Peg, Obstacle
+from .objects import Ball, Peg, Obstacle
 from .modifiers import SpeedUpModifier, SlowDownModifier, BounceMoreModifier
 
 
@@ -98,30 +98,29 @@ class Pachinko(arcade.Window):
         self.bin_list = arcade.SpriteList()
 
         if level < len(self.levels):
-            pegs = self.levels[level](self.space)
+            pegs = self.levels[level]()
             for peg in pegs:
-                new_peg = Peg(
-                    peg.center_x, peg.center_y, self.space, peg.movement_function
-                )
+                new_peg = Peg(peg.center_x, peg.center_y, peg.movement_function)
                 new_peg.shape.collision_type = 2  # Assign collision type for pegs
                 new_peg.body.sprite = new_peg  # Store sprite reference in body
                 self.peg_list.append(new_peg)
+                self.space.add(new_peg.body, new_peg.shape)
         else:
             print("No more levels available")
 
         # Create bins
         for i in range(10):
-            bin_sprite = Obstacle(
+            bin = Obstacle(
                 int(Settings.SCREEN_WIDTH / 10),
                 20,
                 (i + 0.5) * (Settings.SCREEN_WIDTH / 10),
                 25,
-                self.space,
             )
-            bin_sprite.shape.collision_type = 3  # Assign collision type for bins
-            bin_sprite.body.sprite = bin_sprite  # Store sprite reference in body
-            bin_sprite.color = Settings.PALETTE[i % len(Settings.PALETTE)]
-            self.bin_list.append(bin_sprite)
+            self.space.add(bin.body, bin.shape)
+            bin.shape.collision_type = 3  # Assign collision type for bins
+            bin.body.sprite = bin  # Store sprite reference in body
+            bin.color = Settings.PALETTE[i % len(Settings.PALETTE)]
+            self.bin_list.append(bin)
 
         self.__init_texts()
         self.setup_collision_handlers()
@@ -209,7 +208,8 @@ class Pachinko(arcade.Window):
         )
 
     def on_update(self, delta_time):
-        self.space.step(5 * delta_time)
+        for _ in range(5):
+            self.space.step(delta_time * 3)
         self.peg_list.update()
         self.ball_list.update()
 
@@ -232,6 +232,7 @@ class Pachinko(arcade.Window):
             if peg.hit_count >= peg.max_hit_count:
                 self.space.remove(peg.body, peg.shape)
                 peg.remove_from_sprite_lists()
+                del peg.text
 
         self.score_text.text = f"Score: {self.score}"
         self.fps_text.text = f"FPS: {arcade.get_fps():.0f}"
@@ -259,7 +260,8 @@ class Pachinko(arcade.Window):
             self.shoot_ball()
 
     def shoot_ball(self):
-        ball = Ball(Settings.SHOOTER_X, Settings.SHOOTER_Y, self.space)
+        ball = Ball(Settings.SHOOTER_X, Settings.SHOOTER_Y)
+        self.space.add(ball.body, ball.shape)
         ball.shape.collision_type = 1  # Assign collision type for balls
         ball.body.sprite = ball  # Store sprite reference in body
         ball.body.velocity = (

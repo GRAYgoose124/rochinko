@@ -3,40 +3,37 @@ import random
 import math
 
 from .settings import *
-from .lib import Peg
+from .objects import Peg
 
 
 class LevelBuilder:
     @staticmethod
-    def create_triangle_pattern(space):
+    def create_triangle_pattern():
         pegs = []
-        for row in range(1, 10):
+        for row in range(1, 20):
             for column in range(row):
                 x = (Settings.SCREEN_WIDTH / 10) * (column + 1) + (row % 2) * (
-                    Settings.SCREEN_WIDTH / 20
+                    Settings.SCREEN_WIDTH / 15
                 )
-                y = Settings.SCREEN_HEIGHT - (row * 50)
-                peg = Peg(x, y, space)
-                peg.center_x = x
-                peg.center_y = y
+                y = Settings.SCREEN_HEIGHT - (row * 30)
+                peg = Peg(x, y)
+
                 pegs.append(peg)
         return pegs
 
     @staticmethod
-    def create_diamond_pattern(space):
+    def create_diamond_pattern():
         pegs = []
         for row in range(10):
             for column in range(10 - abs(row - 4)):
                 x = Settings.SCREEN_WIDTH / 2 + (column - (9 - abs(row - 4)) / 2) * 50
                 y = Settings.SCREEN_HEIGHT - 100 - row * 50
-                peg = Peg(x, y, space)
-                peg.center_x = x
-                peg.center_y = y
+                peg = Peg(x, y)
                 pegs.append(peg)
         return pegs
 
     @staticmethod
-    def create_circular_pattern(space):
+    def create_circular_pattern():
         pegs = []
         center_x, center_y = Settings.SCREEN_WIDTH / 2, Settings.SCREEN_HEIGHT / 2
         for i in range(50):
@@ -51,14 +48,12 @@ class LevelBuilder:
                     start_y + amplitude * math.sin(t * 0.05),
                 )
 
-            peg = Peg(x, y, space, circular_movement)
-            peg.center_x = x
-            peg.center_y = y
+            peg = Peg(x, y, circular_movement)
             pegs.append(peg)
         return pegs
 
     @staticmethod
-    def create_spiral_pattern(space):
+    def create_spiral_pattern():
         pegs = []
         center_x, center_y = Settings.SCREEN_WIDTH / 2, Settings.SCREEN_HEIGHT / 2
         for i in range(100):
@@ -80,14 +75,12 @@ class LevelBuilder:
                     + (start_y - center_y) * math.cos(angle),
                 )
 
-            peg = Peg(x, y, space, rotating_movement)
-            peg.center_x = x
-            peg.center_y = y
+            peg = Peg(x, y, rotating_movement)
             pegs.append(peg)
         return pegs
 
     @staticmethod
-    def create_random_pattern(space):
+    def create_random_pattern():
         pegs = []
         for _ in range(50):
             x = random.randint(
@@ -103,7 +96,7 @@ class LevelBuilder:
                     start_y + amplitude * math.cos(t * 0.004 + random.random()),
                 )
 
-            peg = Peg(x, y, space, random_movement)
+            peg = Peg(x, y, random_movement)
             peg.center_x = x
             peg.center_y = y
             pegs.append(peg)
