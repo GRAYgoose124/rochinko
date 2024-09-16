@@ -22,7 +22,7 @@ class Ball(arcade.SpriteCircle):
         self.shape.friction = 0.4
         self.modifiers = []
 
-    def update(self):
+    def update(self, delta_time):
         self.center_x = self.body.position.x
         self.center_y = self.body.position.y
         self.angle = self.body.angle
@@ -60,7 +60,7 @@ class Peg(arcade.SpriteCircle):
         self.max_hit_count = 10
         self.text = None
 
-    def update(self):
+    def update(self, delta_time):
         if self.movement_function:
             self.time += 1
             self.body.position = self.movement_function(self.time)
@@ -95,7 +95,7 @@ class Obstacle(arcade.SpriteSolidColor):
         self.shape.elasticity = 0.9
         self.shape.friction = 0.4
 
-    def update(self):
+    def update(self, delta_time):
         self.center_x = self.body.position.x
         self.center_y = self.body.position.y
 

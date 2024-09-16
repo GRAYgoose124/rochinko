@@ -1,58 +1,56 @@
+import arcade
 import json
 import os
-
-import arcade
-
-
-if os.path.exists("rochinko-config.json"):
-    with open("rochinko-config.json", "r") as f:
-        config = json.load(f)
-else:
-    config = {
-        "SCREEN_WIDTH": 1280,
-        "SCREEN_HEIGHT": 720,
-        "BALL_RADIUS": 10,
-        "PEG_RADIUS": 15,
-        "GRAVITY": (0, -9.8),
-        "BOUNCE_DAMPING": 0.9,
-        "SHOOTER_Y": 660,
-        "SHOOTER_X": 640,
-        "INITIAL_BALL_SPEED": 10,
-        "PEG_INFLUENCE": 0.5,
-    }
-    with open("rochinko-config.json", "w") as f:
-        json.dump(config, f, indent=2)
+from dataclasses import dataclass, field, asdict
+from dataclass_wizard import JSONFileWizard
+from typing import Tuple, List
 
 
-class GameSettings:
-    SCREEN_WIDTH = config["SCREEN_WIDTH"]
-    SCREEN_HEIGHT = config["SCREEN_HEIGHT"]
-    BALL_RADIUS = config["BALL_RADIUS"]
-    PEG_RADIUS = config["PEG_RADIUS"]
-    GRAVITY = config["GRAVITY"]
-    BOUNCE_DAMPING = config["BOUNCE_DAMPING"]
-    SHOOTER_Y = config["SHOOTER_Y"]
-    SHOOTER_X = config["SHOOTER_X"]
-    INITIAL_BALL_SPEED = config["INITIAL_BALL_SPEED"]
-    PEG_INFLUENCE = config["PEG_INFLUENCE"]
-
-    PALETTE = [
-        arcade.color.WHITE_SMOKE,
-        arcade.color.RED,
-        arcade.color.GREEN,
-        arcade.color.BLUE,
-        arcade.color.YELLOW,
-        arcade.color.ORANGE,
-        arcade.color.PURPLE,
-        arcade.color.PINK,
-        arcade.color.GRAY,
-        arcade.color.BROWN,
-        arcade.color.LIME,
-        arcade.color.MAROON,
-        arcade.color.OLIVE,
-    ]
+@dataclass
+class __GameSettings(JSONFileWizard):
+    SCREEN_WIDTH: int = 1280
+    SCREEN_HEIGHT: int = 720
+    BALL_RADIUS: int = 10
+    PEG_RADIUS: int = 15
+    GRAVITY: Tuple[float, float] = (0, -500)
+    BOUNCE_DAMPING: float = 0.9
+    SHOOTER_Y: int = 660
+    SHOOTER_X: int = 640
+    INITIAL_BALL_SPEED: int = 10
+    PEG_INFLUENCE: float = 0.5
+    MIN_SHOOT_POWER: int = 0
+    MAX_SHOOT_POWER: int = 1000
+    ENABLE_TIMINGS: bool = True
+    SHOW_HIT_COUNTS: bool = True
 
 
-__all__ = [
-    "GameSettings",
+MODIFIER_PALETTE: List[arcade.types.Color] = [
+    arcade.color.WHITE_SMOKE,
+    arcade.color.RED,
+    arcade.color.GREEN,
+    arcade.color.BLUE,
+    arcade.color.YELLOW,
+    arcade.color.ORANGE,
+    arcade.color.PURPLE,
+    arcade.color.PINK,
+    arcade.color.GRAY,
+    arcade.color.BROWN,
+    arcade.color.LIME,
+    arcade.color.MAROON,
+    arcade.color.OLIVE,
 ]
+
+
+# Load settings from JSON or use defaults
+GameSettings = None
+if os.path.exists("rochinko-config.json"):
+    print("Loading settings from JSON")
+    GameSettings = __GameSettings.from_json_file("rochinko-config.json")
+else:
+    print("Creating new settings")
+    GameSettings = __GameSettings()
+    GameSettings.to_json_file("rochinko-config.json", indent=2)
+
+print(GameSettings)
+
+__all__ = ["GameSettings", "MODIFIER_PALETTE"]

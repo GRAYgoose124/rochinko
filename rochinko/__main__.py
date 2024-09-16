@@ -4,7 +4,7 @@ import math
 
 from pyglet.graphics import Batch
 
-from .settings import GameSettings
+from .settings import GameSettings, MODIFIER_PALETTE
 from .level_builder import LevelBuilder
 from .draw_helpers import update_ball_path_preview
 from .objects import Ball, Peg, Obstacle
@@ -12,7 +12,7 @@ from .modifiers import *
 
 
 class Pachinko(arcade.Window):
-    def __init__(self, enable_timings=True, show_hit_counts=True):
+    def __init__(self):
         super().__init__(
             GameSettings.SCREEN_WIDTH,
             GameSettings.SCREEN_HEIGHT,
@@ -41,8 +41,6 @@ class Pachinko(arcade.Window):
         self.aiming = False
         self.shoot_power = 0
         self.old_shoot_power = None
-        self.max_shoot_power = 200
-        self.min_shoot_power = 0
 
         self.text_list = None
         self.power_text = None
@@ -52,15 +50,18 @@ class Pachinko(arcade.Window):
         self.mouse_x = 0
         self.mouse_y = 0
 
-        self.enable_timings = enable_timings
-        self.show_hit_counts = show_hit_counts
-
-        if self.enable_timings:
+        if GameSettings.ENABLE_TIMINGS:
             arcade.enable_timings()
 
         arcade.set_background_color(arcade.color.DARK_SLATE_GRAY)
 
     def setup(self, level=0):
+        self.__reset_state()
+        self.load_level(level)
+        self.__init_texts()
+        self.__setup_collision_handlers()
+
+    def __reset_state(self):
         self.space = pymunk.Space()
         self.space.gravity = GameSettings.GRAVITY
         self.ball_list = arcade.SpriteList()
@@ -69,12 +70,14 @@ class Pachinko(arcade.Window):
         self.obstacle_list = arcade.SpriteList()
         self.aim_preview_list = arcade.SpriteList()
 
-        self.load_level(level)
-        self.__init_texts()
-        self.__init_preview_list()
-        self.setup_collision_handlers()
+        self.score = 0
+        self.current_level = 0
+        self.aim_angle = 0
+        self.aiming = False
+        self.shoot_power = 0
+        self.old_shoot_power = None
 
-    def setup_collision_handlers(self):
+    def __setup_collision_handlers(self):
         handler = self.space.add_collision_handler(1, 2)  # 1 for balls, 2 for pegs
         handler.begin = self.handle_peg_collision
 
@@ -109,6 +112,8 @@ class Pachinko(arcade.Window):
                 new_peg.body.sprite = new_peg  # Store sprite reference in body
                 self.peg_list.append(new_peg)
                 self.space.add(new_peg.body, new_peg.shape)
+            self.current_level = level
+            print(f"Loaded level {level}")
         else:
             print("No more levels available")
 
@@ -123,14 +128,8 @@ class Pachinko(arcade.Window):
             self.space.add(bin.body, bin.shape)
             bin.shape.collision_type = 3  # Assign collision type for bins
             bin.body.sprite = bin  # Store sprite reference in body
-            bin.color = GameSettings.PALETTE[i % len(GameSettings.PALETTE)]
+            bin.color = MODIFIER_PALETTE[i % len(MODIFIER_PALETTE)]
             self.bin_list.append(bin)
-
-    def __init_preview_list(self):
-        self.aim_preview_list = arcade.SpriteList()
-        for _ in range(100):
-            preview_sprite = arcade.SpriteSolidColor(4, 4, color=arcade.color.YELLOW)
-            self.aim_preview_list.append(preview_sprite)
 
     def __init_texts(self):
         self.text_list = Batch()
@@ -153,7 +152,7 @@ class Pachinko(arcade.Window):
             anchor_x="center",
             batch=self.text_list,
         )
-        if self.enable_timings:
+        if GameSettings.ENABLE_TIMINGS:
             self.fps_text = arcade.Text(
                 f"FPS: {arcade.get_fps():.0f}",
                 GameSettings.SHOOTER_X,
@@ -164,7 +163,7 @@ class Pachinko(arcade.Window):
                 batch=self.text_list,
             )
         # Add hit count text to pegs
-        if self.show_hit_counts:
+        if GameSettings.SHOW_HIT_COUNTS:
             for peg in self.peg_list:
                 peg.text = arcade.Text(
                     str(peg.hit_count),
@@ -205,15 +204,15 @@ class Pachinko(arcade.Window):
             )
 
     def on_update(self, delta_time):
-        for _ in range(10):
-            self.space.step(delta_time * 1.2)
-        self.peg_list.update()
-        self.ball_list.update()
+        self.space.step(delta_time)
+        self.peg_list.update(delta_time)
+        self.ball_list.update(delta_time)
 
         self.score_text.text = f"Score: {self.score}"
         if self.fps_text:
             self.fps_text.text = f"FPS: {arcade.get_fps():.0f}"
 
+        # TODO: this is slowish
         self.aim_preview_list = update_ball_path_preview(
             self.peg_list,
             self.aim_angle,
@@ -230,7 +229,8 @@ class Pachinko(arcade.Window):
             (x - GameSettings.SHOOTER_X) ** 2 + (y - GameSettings.SHOOTER_Y) ** 2
         )
         self.shoot_power = min(
-            max(distance, self.min_shoot_power), self.max_shoot_power
+            max(distance, GameSettings.MIN_SHOOT_POWER),
+            GameSettings.MAX_SHOOT_POWER,
         )
         if self.old_shoot_power != self.shoot_power:
             self.power_text.text = f"Power: {self.shoot_power:.0f}"
@@ -239,12 +239,13 @@ class Pachinko(arcade.Window):
     def on_mouse_press(self, x, y, button, modifiers):
         if button == arcade.MOUSE_BUTTON_LEFT:
             self.aiming = True
-        elif button == arcade.MOUSE_BUTTON_RIGHT:
-            self.current_level = (self.current_level + 1) % len(self.levels)
-            self.setup(self.current_level)
+        elif button == arcade.MOUSE_BUTTON_RIGHT and not self.aiming:
+            self.setup((self.current_level + 1) % len(self.levels))
+        else:
+            self.aiming = False
 
     def on_mouse_release(self, x, y, button, modifiers):
-        if button == arcade.MOUSE_BUTTON_LEFT:
+        if button == arcade.MOUSE_BUTTON_LEFT and self.aiming:
             self.aiming = False
             self.shoot_ball()
 

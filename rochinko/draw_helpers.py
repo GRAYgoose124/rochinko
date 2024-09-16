@@ -17,9 +17,9 @@ def update_ball_path_preview(peg_list, aim_angle, shoot_power):
         preview_sprite.center_x = x
         preview_sprite.center_y = y
         preview_list.append(preview_sprite)
-        x += dx * 0.25
-        y += dy * 0.25
-        dy += GameSettings.GRAVITY[1] * 0.25
+        x += dx * 0.05
+        y += dy * 0.05
+        dy += GameSettings.GRAVITY[1] * 0.05
 
         if x < 0 or x > GameSettings.SCREEN_WIDTH or y < 0:
             break

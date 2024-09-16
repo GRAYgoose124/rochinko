@@ -2,7 +2,7 @@ import arcade
 import random
 import math
 
-from .settings import *
+from .settings import GameSettings
 from .objects import Peg
 
 
