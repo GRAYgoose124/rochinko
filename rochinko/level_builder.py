@@ -8,7 +8,7 @@ from .lib import Peg
 
 class LevelBuilder:
     @staticmethod
-    def create_triangle_pattern():
+    def create_triangle_pattern(space):
         pegs = []
         for row in range(1, 10):
             for column in range(row):
@@ -16,27 +16,27 @@ class LevelBuilder:
                     Settings.SCREEN_WIDTH / 20
                 )
                 y = Settings.SCREEN_HEIGHT - (row * 50)
-                peg = Peg(Settings.PEG_RADIUS, arcade.color.BLUE)
+                peg = Peg(x, y, space)
                 peg.center_x = x
                 peg.center_y = y
                 pegs.append(peg)
         return pegs
 
     @staticmethod
-    def create_diamond_pattern():
+    def create_diamond_pattern(space):
         pegs = []
         for row in range(10):
             for column in range(10 - abs(row - 4)):
                 x = Settings.SCREEN_WIDTH / 2 + (column - (9 - abs(row - 4)) / 2) * 50
                 y = Settings.SCREEN_HEIGHT - 100 - row * 50
-                peg = Peg(Settings.PEG_RADIUS, arcade.color.BLUE)
+                peg = Peg(x, y, space)
                 peg.center_x = x
                 peg.center_y = y
                 pegs.append(peg)
         return pegs
 
     @staticmethod
-    def create_circular_pattern():
+    def create_circular_pattern(space):
         pegs = []
         center_x, center_y = Settings.SCREEN_WIDTH / 2, Settings.SCREEN_HEIGHT / 2
         for i in range(50):
@@ -51,14 +51,14 @@ class LevelBuilder:
                     start_y + amplitude * math.sin(t * 0.05),
                 )
 
-            peg = Peg(Settings.PEG_RADIUS, arcade.color.BLUE, circular_movement)
+            peg = Peg(x, y, space, circular_movement)
             peg.center_x = x
             peg.center_y = y
             pegs.append(peg)
         return pegs
 
     @staticmethod
-    def create_spiral_pattern():
+    def create_spiral_pattern(space):
         pegs = []
         center_x, center_y = Settings.SCREEN_WIDTH / 2, Settings.SCREEN_HEIGHT / 2
         for i in range(100):
@@ -80,14 +80,14 @@ class LevelBuilder:
                     + (start_y - center_y) * math.cos(angle),
                 )
 
-            peg = Peg(Settings.PEG_RADIUS, arcade.color.BLUE, rotating_movement)
+            peg = Peg(x, y, space, rotating_movement)
             peg.center_x = x
             peg.center_y = y
             pegs.append(peg)
         return pegs
 
     @staticmethod
-    def create_random_pattern():
+    def create_random_pattern(space):
         pegs = []
         for _ in range(50):
             x = random.randint(
@@ -103,7 +103,7 @@ class LevelBuilder:
                     start_y + amplitude * math.cos(t * 0.004 + random.random()),
                 )
 
-            peg = Peg(Settings.PEG_RADIUS, arcade.color.BLUE, random_movement)
+            peg = Peg(x, y, space, random_movement)
             peg.center_x = x
             peg.center_y = y
             pegs.append(peg)
