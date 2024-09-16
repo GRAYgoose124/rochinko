@@ -24,7 +24,7 @@ else:
         json.dump(config, f, indent=2)
 
 
-class Settings:
+class GameSettings:
     SCREEN_WIDTH = config["SCREEN_WIDTH"]
     SCREEN_HEIGHT = config["SCREEN_HEIGHT"]
     BALL_RADIUS = config["BALL_RADIUS"]
@@ -54,5 +54,5 @@ class Settings:
 
 
 __all__ = [
-    "Settings",
+    "GameSettings",
 ]

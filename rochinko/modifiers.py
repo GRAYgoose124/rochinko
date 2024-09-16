@@ -23,6 +23,9 @@ class Modifier:
 
 
 class SpeedUpModifier(Modifier):
+    def __init__(self, duration=None):
+        super().__init__("speed_up", duration)
+
     def apply(self, ball):
         ball.change_x *= 1.5
         ball.change_y *= 1.5
@@ -35,6 +38,9 @@ class SpeedUpModifier(Modifier):
 
 
 class SlowDownModifier(Modifier):
+    def __init__(self, duration=None):
+        super().__init__("slow_down", duration)
+
     def apply(self, ball):
         ball.change_x *= 0.75
         ball.change_y *= 0.75
@@ -47,8 +53,42 @@ class SlowDownModifier(Modifier):
 
 
 class BounceMoreModifier(Modifier):
+    def __init__(self, duration=None):
+        super().__init__("bounce_more", duration)
+
     def apply(self, ball):
         ball.color = arcade.color.BLUE  # Visual indication
+        ball.shape.elasticity = 1.1
 
     def remove(self, ball):
         ball.color = arcade.color.WHITE  # Reset color
+
+
+class NoBounceModifier(Modifier):
+    def __init__(self, duration=None):
+        super().__init__("no_bounce", duration)
+
+    def apply(self, ball):
+        ball.color = arcade.color.WHITE  # Visual indication
+        ball.shape.elasticity = 0.0
+
+    def remove(self, ball):
+        ball.color = arcade.color.WHITE  # Reset color
+        ball.shape.elasticity = 1.0
+
+
+class InvertGravityModifier(Modifier):
+    def __init__(self, duration=None):
+        super().__init__("invert_gravity", duration)
+
+    def apply(self, ball):
+        ball.color = arcade.color.ORANGE  # Visual indication
+
+
+__all__ = [
+    "SpeedUpModifier",
+    "SlowDownModifier",
+    "BounceMoreModifier",
+    "InvertGravityModifier",
+    "NoBounceModifier",
+]

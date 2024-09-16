@@ -1,13 +1,13 @@
 import arcade
 import math
 
-from .settings import Settings
+from .settings import GameSettings
 
 
-def draw_ball_path_preview(peg_list, shooter_x, shooter_y, aim_angle, shoot_power):
+def update_ball_path_preview(peg_list, aim_angle, shoot_power):
     preview_list = arcade.SpriteList()
-    x = shooter_x
-    y = shooter_y
+    x = GameSettings.SHOOTER_X
+    y = GameSettings.SHOOTER_Y
     dx = math.cos(aim_angle) * (shoot_power)
     dy = math.sin(aim_angle) * (shoot_power)
 
@@ -17,20 +17,20 @@ def draw_ball_path_preview(peg_list, shooter_x, shooter_y, aim_angle, shoot_powe
         preview_sprite.center_x = x
         preview_sprite.center_y = y
         preview_list.append(preview_sprite)
-        x += dx * 0.1
-        y += dy * 0.1
-        dy += Settings.GRAVITY[1] * 0.1
+        x += dx * 0.25
+        y += dy * 0.25
+        dy += GameSettings.GRAVITY[1] * 0.25
 
-        if x < 0 or x > Settings.SCREEN_WIDTH or y < 0:
+        if x < 0 or x > GameSettings.SCREEN_WIDTH or y < 0:
             break
 
         for peg in peg_list:
             if (x - peg.center_x) ** 2 + (y - peg.center_y) ** 2 <= (
-                Settings.BALL_RADIUS + Settings.PEG_RADIUS
+                GameSettings.BALL_RADIUS + GameSettings.PEG_RADIUS
             ) ** 2:
                 done = True
                 break
         if done:
             break
 
-    preview_list.draw()
+    return preview_list

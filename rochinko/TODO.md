@@ -1,1 +1,6 @@
-- peg inertia should contribute to the ball's bounce
+- bins remove balls and apply modifiers to next shots
+- obstacles apply modifiers to the balls that hit them
+- invert gravity modifier per ball
+- physics/restitution modifier per ball
+- make pegs have a non collision regenerating state
+- variable power should be a modifier, default fixed power

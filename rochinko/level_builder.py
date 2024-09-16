@@ -6,16 +6,21 @@ from .settings import *
 from .objects import Peg
 
 
+class Level:
+    def __init__(self, pegs):
+        self.pegs = pegs
+
+
 class LevelBuilder:
     @staticmethod
     def create_triangle_pattern():
         pegs = []
         for row in range(1, 20):
             for column in range(row):
-                x = (Settings.SCREEN_WIDTH / 10) * (column + 1) + (row % 2) * (
-                    Settings.SCREEN_WIDTH / 15
+                x = (GameSettings.SCREEN_WIDTH / 10) * (column + 1) + (row % 2) * (
+                    GameSettings.SCREEN_WIDTH / 15
                 )
-                y = Settings.SCREEN_HEIGHT - (row * 30)
+                y = GameSettings.SCREEN_HEIGHT - (row * 30)
                 peg = Peg(x, y)
 
                 pegs.append(peg)
@@ -26,8 +31,11 @@ class LevelBuilder:
         pegs = []
         for row in range(10):
             for column in range(10 - abs(row - 4)):
-                x = Settings.SCREEN_WIDTH / 2 + (column - (9 - abs(row - 4)) / 2) * 50
-                y = Settings.SCREEN_HEIGHT - 100 - row * 50
+                x = (
+                    GameSettings.SCREEN_WIDTH / 2
+                    + (column - (9 - abs(row - 4)) / 2) * 50
+                )
+                y = GameSettings.SCREEN_HEIGHT - 100 - row * 50
                 peg = Peg(x, y)
                 pegs.append(peg)
         return pegs
@@ -35,7 +43,10 @@ class LevelBuilder:
     @staticmethod
     def create_circular_pattern():
         pegs = []
-        center_x, center_y = Settings.SCREEN_WIDTH / 2, Settings.SCREEN_HEIGHT / 2
+        center_x, center_y = (
+            GameSettings.SCREEN_WIDTH / 2,
+            GameSettings.SCREEN_HEIGHT / 2,
+        )
         for i in range(50):
             angle = i * (2 * math.pi / 50)
             radius = 200
@@ -55,7 +66,10 @@ class LevelBuilder:
     @staticmethod
     def create_spiral_pattern():
         pegs = []
-        center_x, center_y = Settings.SCREEN_WIDTH / 2, Settings.SCREEN_HEIGHT / 2
+        center_x, center_y = (
+            GameSettings.SCREEN_WIDTH / 2,
+            GameSettings.SCREEN_HEIGHT / 2,
+        )
         for i in range(100):
             angle = i * 0.5
             radius = 10 + i * 3
@@ -84,10 +98,12 @@ class LevelBuilder:
         pegs = []
         for _ in range(50):
             x = random.randint(
-                Settings.PEG_RADIUS, Settings.SCREEN_WIDTH - Settings.PEG_RADIUS
+                GameSettings.PEG_RADIUS,
+                GameSettings.SCREEN_WIDTH - GameSettings.PEG_RADIUS,
             )
             y = random.randint(
-                Settings.PEG_RADIUS + 100, Settings.SCREEN_HEIGHT - Settings.PEG_RADIUS
+                GameSettings.PEG_RADIUS + 100,
+                GameSettings.SCREEN_HEIGHT - GameSettings.PEG_RADIUS,
             )
 
             def random_movement(t, start_x=x, start_y=y, amplitude=40):
