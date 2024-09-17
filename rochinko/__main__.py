@@ -29,8 +29,7 @@ class RochinkoApp(arcade.Window, TextManagementSystem):
         self.aiming = False
         self.aim_preview_list = arcade.SpriteList()
 
-        self.mouse_x = 0
-        self.mouse_y = 0
+        self.mouse_xy = (0, 0)
 
         if GameSettings.ENABLE_TIMINGS:
             arcade.enable_timings()
@@ -61,8 +60,8 @@ class RochinkoApp(arcade.Window, TextManagementSystem):
             arcade.draw_line(
                 GameSettings.SHOOTER_X,
                 GameSettings.SHOOTER_Y,
-                self.mouse_x,
-                self.mouse_y,
+                self.mouse_xy[0],
+                self.mouse_xy[1],
                 arcade.color.WHITE,
                 1,
             )
@@ -81,8 +80,7 @@ class RochinkoApp(arcade.Window, TextManagementSystem):
         )
 
     def on_mouse_motion(self, x, y, dx, dy):
-        self.mouse_x = x
-        self.mouse_y = y
+        self.mouse_xy = (x, y)
         self.aim_angle = math.atan2(
             y - GameSettings.SHOOTER_Y, x - GameSettings.SHOOTER_X
         )
@@ -106,17 +104,17 @@ class RochinkoApp(arcade.Window, TextManagementSystem):
     def on_mouse_release(self, x, y, button, modifiers):
         if button == arcade.MOUSE_BUTTON_LEFT and self.aiming:
             self.aiming = False
-            shoot_ball(
-                self.level_manager.active_level, self.aim_angle, self.shoot_power
-            )
+
+            if len(self.level_manager.active_level.ball_list) < 3:
+                shoot_ball(
+                    self.level_manager.active_level, self.aim_angle, self.shoot_power
+                )
 
     def on_resize(self, width, height):
         GameSettings.SCREEN_WIDTH = width
         GameSettings.SCREEN_HEIGHT = height
         GameSettings.SHOOTER_X = width / 2
-        GameSettings.SHOOTER_Y = (
-            GameSettings.SHOOTER_Y * height / GameSettings.SCREEN_HEIGHT
-        )
+        GameSettings.SHOOTER_Y = height - 60
         self.setup()
 
 

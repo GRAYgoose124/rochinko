@@ -2,6 +2,7 @@ import arcade
 import pymunk
 
 from .settings import GameSettings
+from .sound import LOADED_SOUNDS
 
 
 class Ball(arcade.SpriteCircle):
@@ -79,6 +80,7 @@ class Peg(arcade.SpriteCircle):
 
     def on_collision(self, arbiter, space, data):
         self.hit_count += 1
+        arcade.play_sound(LOADED_SOUNDS["clang"])
         return True
 
 
