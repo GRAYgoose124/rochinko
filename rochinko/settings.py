@@ -32,7 +32,7 @@ MODIFIER_PALETTE: List[arcade.types.Color] = [
     arcade.color.YELLOW,
     arcade.color.ORANGE,
     arcade.color.PURPLE,
-    arcade.color.PINK,
+    arcade.color.PINK, 
     arcade.color.GRAY,
     arcade.color.BROWN,
     arcade.color.LIME,
@@ -43,13 +43,14 @@ MODIFIER_PALETTE: List[arcade.types.Color] = [
 
 # Load settings from JSON or use defaults
 GameSettings = None
-if os.path.exists("rochinko-config.json"):
-    print("Loading settings from JSON")
+try:
     GameSettings = __GameSettings.from_json_file("rochinko-config.json")
-else:
-    print("Creating new settings")
+    print("Settings loaded from file successfully")
+except Exception as e:
     GameSettings = __GameSettings()
     GameSettings.to_json_file("rochinko-config.json", indent=2)
+    print("Initialized default settings")
+
 
 print(GameSettings)
 

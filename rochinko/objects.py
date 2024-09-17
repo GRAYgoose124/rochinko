@@ -77,6 +77,10 @@ class Peg(arcade.SpriteCircle):
             self.remove_from_sprite_lists()
             del self.text
 
+    def on_collision(self, arbiter, space, data):
+        self.hit_count += 1
+        return True
+
 
 class Obstacle(arcade.SpriteSolidColor):
     def __init__(self, width, height, x, y):

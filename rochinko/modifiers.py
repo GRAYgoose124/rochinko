@@ -22,6 +22,9 @@ class Modifier:
         pass
 
 
+# Modifiers
+
+
 class SpeedUpModifier(Modifier):
     def __init__(self, duration=None):
         super().__init__("speed_up", duration)
