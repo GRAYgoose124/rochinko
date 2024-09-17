@@ -1,9 +1,12 @@
 import arcade
-import json
-import os
-from dataclasses import dataclass, field, asdict
+import logging
+
+from dataclasses import dataclass
 from dataclass_wizard import JSONFileWizard
 from typing import Tuple, List
+
+
+log = logging.getLogger(__name__)
 
 
 @dataclass
@@ -22,6 +25,8 @@ class __GameSettings(JSONFileWizard):
     MAX_SHOOT_POWER: int = 1000
     ENABLE_TIMINGS: bool = True
     SHOW_HIT_COUNTS: bool = True
+    LOG_LEVEL: int = logging.DEBUG
+    LOG_TO_FILE: bool = False
 
 
 MODIFIER_PALETTE: List[arcade.types.Color] = [
@@ -32,7 +37,7 @@ MODIFIER_PALETTE: List[arcade.types.Color] = [
     arcade.color.YELLOW,
     arcade.color.ORANGE,
     arcade.color.PURPLE,
-    arcade.color.PINK, 
+    arcade.color.PINK,
     arcade.color.GRAY,
     arcade.color.BROWN,
     arcade.color.LIME,
@@ -45,13 +50,13 @@ MODIFIER_PALETTE: List[arcade.types.Color] = [
 GameSettings = None
 try:
     GameSettings = __GameSettings.from_json_file("rochinko-config.json")
-    print("Settings loaded from file successfully")
+    log.info("Settings loaded from file successfully")
 except Exception as e:
     GameSettings = __GameSettings()
     GameSettings.to_json_file("rochinko-config.json", indent=2)
-    print("Initialized default settings")
+    log.info("Initialized default settings")
 
 
-print(GameSettings)
+log.debug(GameSettings)
 
 __all__ = ["GameSettings", "MODIFIER_PALETTE"]

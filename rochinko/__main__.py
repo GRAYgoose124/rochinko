@@ -1,14 +1,18 @@
 import arcade
 import math
+import logging
 
 from .settings import GameSettings
-from .level_manager import LevelManager
+from .level.manager import LevelManager
 from .game_systems import TextManagementSystem
 from .draw_helpers import update_ball_path_preview
 from .game_helpers import shoot_ball
 
 
-class Pachinko(arcade.Window, TextManagementSystem):
+log = logging.getLogger(__name__)
+
+
+class RochinkoApp(arcade.Window, TextManagementSystem):
     def __init__(self):
         super().__init__(
             GameSettings.SCREEN_WIDTH,
@@ -65,7 +69,7 @@ class Pachinko(arcade.Window, TextManagementSystem):
 
     def on_update(self, delta_time):
         self.level_manager.active_level.on_update(delta_time)
-        self.score_text.text = f"Score: {self.level_manager.active_level.score}"
+        self.score_text.text = f"Score: {self.level_manager.active_level.score}, total: {self.level_manager.score}"
         if self.fps_text:
             self.fps_text.text = f"FPS: {arcade.get_fps():.0f}"
 
@@ -106,10 +110,26 @@ class Pachinko(arcade.Window, TextManagementSystem):
                 self.level_manager.active_level, self.aim_angle, self.shoot_power
             )
 
+    def on_resize(self, width, height):
+        GameSettings.SCREEN_WIDTH = width
+        GameSettings.SCREEN_HEIGHT = height
+        GameSettings.SHOOTER_X = width / 2
+        GameSettings.SHOOTER_Y = (
+            GameSettings.SHOOTER_Y * height / GameSettings.SCREEN_HEIGHT
+        )
+        self.setup()
+
 
 def main():
-    window = Pachinko()
-    window.setup()
+    logging.basicConfig(
+        level=GameSettings.LOG_LEVEL,
+        filename="rochinko.log" if GameSettings.LOG_TO_FILE else None,
+        format="%(levelname)s - %(message)s",
+    )
+    logging.getLogger("arcade").setLevel(logging.WARNING)
+    logging.getLogger("pymunk").setLevel(logging.WARNING)
+
+    RochinkoApp().setup()
     arcade.run()
 
 

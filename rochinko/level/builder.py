@@ -2,16 +2,21 @@ import arcade
 import random
 import math
 
-from .settings import GameSettings
-from .objects import Peg
-
-
-class Level:
-    def __init__(self, pegs):
-        self.pegs = pegs
+from ..settings import GameSettings
+from ..objects import Peg
 
 
 class LevelBuilder:
+    @staticmethod
+    def all_builders():
+        return [
+            LevelBuilder.create_triangle_pattern,
+            LevelBuilder.create_diamond_pattern,
+            LevelBuilder.create_circular_pattern,
+            LevelBuilder.create_spiral_pattern,
+            LevelBuilder.create_random_pattern,
+        ]
+
     @staticmethod
     def create_triangle_pattern():
         pegs = []
@@ -22,7 +27,6 @@ class LevelBuilder:
                 )
                 y = GameSettings.SCREEN_HEIGHT - (row * 30)
                 peg = Peg(x, y)
-
                 pegs.append(peg)
         return pegs
 
@@ -113,7 +117,5 @@ class LevelBuilder:
                 )
 
             peg = Peg(x, y, random_movement)
-            peg.center_x = x
-            peg.center_y = y
             pegs.append(peg)
         return pegs

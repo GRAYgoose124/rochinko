@@ -17,7 +17,7 @@ class TextManagementSystem:
         self.power_text = arcade.Text(
             f"Power: {self.shoot_power:.0f}",
             GameSettings.SHOOTER_X,
-            GameSettings.SHOOTER_Y + 30,
+            GameSettings.SHOOTER_Y - 30,
             arcade.color.WHITE,
             12,
             anchor_x="center",
@@ -26,7 +26,7 @@ class TextManagementSystem:
         self.score_text = arcade.Text(
             f"Score: {self.level_manager.active_level.score}",
             GameSettings.SHOOTER_X,
-            GameSettings.SHOOTER_Y - 30,
+            GameSettings.SHOOTER_Y + 30,
             arcade.color.WHITE,
             12,
             anchor_x="center",
@@ -35,8 +35,8 @@ class TextManagementSystem:
         if GameSettings.ENABLE_TIMINGS:
             self.fps_text = arcade.Text(
                 f"FPS: {arcade.get_fps():.0f}",
-                GameSettings.SHOOTER_X,
-                GameSettings.SHOOTER_Y - 60,
+                GameSettings.SCREEN_WIDTH - 40,
+                GameSettings.SCREEN_HEIGHT - 20,
                 arcade.color.WHITE,
                 12,
                 anchor_x="center",
