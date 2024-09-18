@@ -45,7 +45,6 @@ MODIFIER_PALETTE: List[arcade.types.Color] = [
     arcade.color.OLIVE,
 ]
 
-
 # Load settings from JSON or use defaults
 GameSettings = None
 try:

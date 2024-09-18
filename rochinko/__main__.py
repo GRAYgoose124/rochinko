@@ -45,15 +45,6 @@ class RochinkoApp(arcade.Window, TextManagementSystem):
         self.clear()
         self.level_manager.active_level.draw()
         self.text_list.draw()
-
-        # Draw shooter
-        arcade.draw_circle_filled(
-            GameSettings.SHOOTER_X,
-            GameSettings.SHOOTER_Y,
-            GameSettings.BALL_RADIUS,
-            arcade.color.RED,
-        )
-
         # Aim preview
         self.aim_preview_list.draw()
         if self.aiming:
@@ -65,6 +56,13 @@ class RochinkoApp(arcade.Window, TextManagementSystem):
                 arcade.color.WHITE,
                 1,
             )
+        # Draw shooter
+        arcade.draw_circle_filled(
+            GameSettings.SHOOTER_X,
+            GameSettings.SHOOTER_Y,
+            GameSettings.BALL_RADIUS,
+            arcade.color.RED,
+        )
 
     def on_update(self, delta_time):
         self.level_manager.active_level.on_update(delta_time)

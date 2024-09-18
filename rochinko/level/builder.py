@@ -19,7 +19,7 @@ class LevelBuilder:
 
     @staticmethod
     def create_triangle_pattern():
-        pegs = []
+        pegs = arcade.SpriteList()
         for row in range(1, 20):
             for column in range(row):
                 x = (GameSettings.SCREEN_WIDTH / 10) * (column + 1) + (row % 2) * (
@@ -32,7 +32,7 @@ class LevelBuilder:
 
     @staticmethod
     def create_diamond_pattern():
-        pegs = []
+        pegs = arcade.SpriteList()
         for row in range(10):
             for column in range(10 - abs(row - 4)):
                 x = (
@@ -46,7 +46,7 @@ class LevelBuilder:
 
     @staticmethod
     def create_circular_pattern():
-        pegs = []
+        pegs = arcade.SpriteList()
         center_x, center_y = (
             GameSettings.SCREEN_WIDTH / 2,
             GameSettings.SCREEN_HEIGHT / 2,
@@ -69,7 +69,7 @@ class LevelBuilder:
 
     @staticmethod
     def create_spiral_pattern():
-        pegs = []
+        pegs = arcade.SpriteList()
         center_x, center_y = (
             GameSettings.SCREEN_WIDTH / 2,
             GameSettings.SCREEN_HEIGHT / 2,
@@ -99,7 +99,7 @@ class LevelBuilder:
 
     @staticmethod
     def create_random_pattern():
-        pegs = []
+        pegs = arcade.SpriteList()
         for _ in range(50):
             x = random.randint(
                 GameSettings.PEG_RADIUS,

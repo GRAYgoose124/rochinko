@@ -16,13 +16,19 @@ DEFAULT_BIN_EFFECTS = {
 
 
 class ModifierSystem:
-    def trigger_bin_effect(self, ball, bin_sprite, effects=None):
+    def __init__(self):
+        self.pending_modifiers = []
+
+    def trigger_bin_effect(self, ball, bin_sprite, effects=None, delayed=False):
         if effects is None:
             effects = DEFAULT_BIN_EFFECTS
 
         effect = effects.get(bin_sprite.color, lambda: None)
         if isinstance(effect, Modifier):
-            self.apply_modifier(ball, effect)
+            if delayed:
+                self.pending_modifiers.append(effect)
+            else:
+                self.apply_modifier(ball, effect)
         else:
             if isinstance(effect, int):
                 self.add_score(effect)
@@ -70,7 +76,7 @@ class CollisionSystem:
 
         ball = ball_shape.body.sprite
         bin_sprite = bin_shape.body.sprite
-        self.trigger_bin_effect(ball, bin_sprite)
+        self.trigger_bin_effect(ball, bin_sprite, delayed=True)
         ball.remove_from_sprite_lists()
 
         return True
