@@ -91,6 +91,12 @@ class LevelView(arcade.View, TextManagementSystem):
                     self.level_manager.active_level, self.aim_angle, self.shoot_power
                 )
 
+    def on_key_press(self, symbol: int, modifiers: int):
+        if symbol == arcade.key.SPACE:
+            self.level_manager.active_level.space_steps = (
+                self.level_manager.active_level.space_steps + 1
+            ) % 5
+
     def on_resize(self, width, height):
         super().on_resize(width, height)
         self.setup()
