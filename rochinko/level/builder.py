@@ -3,7 +3,7 @@ import random
 import math
 
 from ..settings import GameSettings
-from ..objects import Peg
+from ..objects import Peg, Bomb
 
 
 class LevelBuilder:
@@ -18,7 +18,7 @@ class LevelBuilder:
         ]
 
     @staticmethod
-    def create_triangle_pattern():
+    def create_triangle_pattern(window):
         pegs = arcade.SpriteList()
         for row in range(1, 20):
             for column in range(row):
@@ -26,12 +26,15 @@ class LevelBuilder:
                     GameSettings.SCREEN_WIDTH / 15
                 )
                 y = GameSettings.SCREEN_HEIGHT - (row * 30)
-                peg = Peg(x, y)
+                if random.random() < 0.1:
+                    peg = Bomb(x, y, window)
+                else:
+                    peg = Peg(x, y)
                 pegs.append(peg)
         return pegs
 
     @staticmethod
-    def create_diamond_pattern():
+    def create_diamond_pattern(window):
         pegs = arcade.SpriteList()
         for row in range(10):
             for column in range(10 - abs(row - 4)):
@@ -45,7 +48,7 @@ class LevelBuilder:
         return pegs
 
     @staticmethod
-    def create_circular_pattern():
+    def create_circular_pattern(window):
         pegs = arcade.SpriteList()
         center_x, center_y = (
             GameSettings.SCREEN_WIDTH / 2,
@@ -68,7 +71,7 @@ class LevelBuilder:
         return pegs
 
     @staticmethod
-    def create_spiral_pattern():
+    def create_spiral_pattern(window):
         pegs = arcade.SpriteList()
         center_x, center_y = (
             GameSettings.SCREEN_WIDTH / 2,
@@ -98,7 +101,7 @@ class LevelBuilder:
         return pegs
 
     @staticmethod
-    def create_random_pattern():
+    def create_random_pattern(window):
         pegs = arcade.SpriteList()
         for _ in range(50):
             x = random.randint(

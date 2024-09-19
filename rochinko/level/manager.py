@@ -10,8 +10,9 @@ log = logging.getLogger(__name__)
 
 
 class LevelManager(ScoreSystem):
-    def __init__(self):
+    def __init__(self, window):
         ScoreSystem.__init__(self)
+        self.window = window
 
         self.level_index = 0
         self.active_level = None
@@ -33,7 +34,7 @@ class LevelManager(ScoreSystem):
     def load_level(self, level_idx):
         new_level = Level()
         if level_idx < len(self.level_builders):
-            pegs = self.level_builders[level_idx]()
+            pegs = self.level_builders[level_idx](self.window)
             new_level.add_pegs(pegs)
             log.info(f"Loaded level {level_idx}")
         else:

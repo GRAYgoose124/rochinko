@@ -1,8 +1,13 @@
+import array
+import random
+import time
 import arcade
 import pymunk
+from dataclasses import dataclass
 
 from .settings import GameSettings
 from .sound import LOADED_SOUNDS
+from .draw_helpers import Burst
 
 
 class Ball(arcade.SpriteCircle):
@@ -39,11 +44,11 @@ class Ball(arcade.SpriteCircle):
 
 
 class Peg(arcade.SpriteCircle):
-    def __init__(self, x, y, movement_function=None):
+    def __init__(self, x, y, color=arcade.color.BLUE, movement_function=None):
         # super().__init__("path/to/peg_image.png", scale=0.5)
         super().__init__(
             radius=GameSettings.PEG_RADIUS,
-            color=arcade.color.BLUE,
+            color=color,
             mass=1,
         )
         self.center_x = x
@@ -82,6 +87,54 @@ class Peg(arcade.SpriteCircle):
         self.hit_count += 1
         arcade.play_sound(LOADED_SOUNDS["clang"])
         return True
+
+
+class Bomb(Peg):
+    def __init__(self, x, y, window):
+        super().__init__(x, y, arcade.color.RED)
+        self.window = window
+        self.max_hit_count = 2
+
+    def on_collision(self, arbiter, space, data):
+        super().on_collision(arbiter, space, data)
+        # trigger explosion
+        if self.hit_count >= self.max_hit_count:
+            self.explode()
+            return False
+        return True
+
+    def explode(self):
+        """User clicks mouse"""
+
+        def _gen_initial_data(initial_x, initial_y):
+            """Generate data for each particle"""
+            for i in range(GameSettings.PARTICLE_COUNT):
+                dx = random.uniform(-0.2, 0.2)
+                dy = random.uniform(-0.2, 0.2)
+                yield initial_x
+                yield initial_y
+                yield dx
+                yield dy
+
+        # Get initial particle data
+        initial_data = _gen_initial_data(self.center_x, self.center_y)
+
+        # Create a buffer with that data
+        buffer = self.window.ctx.buffer(data=array.array("f", initial_data))
+
+        # Create a buffer description that says how the buffer data is formatted.
+        buffer_description = arcade.gl.BufferDescription(
+            buffer, "2f 2f", ["in_pos", "in_vel"]
+        )
+        # Create our Vertex Attribute Object
+        vao = self.window.ctx.geometry([buffer_description])
+
+        # Create the Burst object and add it to the list of bursts
+        burst = Burst(buffer=buffer, vao=vao, start_time=time.time())
+        self.window.level_view.burst_list.append(burst)
+
+        self.text = None
+        self.remove_from_sprite_lists()
 
 
 class Obstacle(arcade.SpriteSolidColor):

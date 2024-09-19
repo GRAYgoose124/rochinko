@@ -1,3 +1,5 @@
+import array
+from dataclasses import dataclass
 import arcade
 import math
 
@@ -34,3 +36,12 @@ def update_ball_path_preview(peg_list, aim_angle, shoot_power):
             break
 
     return preview_list
+
+
+@dataclass
+class Burst:
+    """Track for each burst."""
+
+    buffer: arcade.gl.Buffer
+    vao: arcade.gl.Geometry
+    start_time: float

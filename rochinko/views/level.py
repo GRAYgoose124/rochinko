@@ -1,9 +1,10 @@
+import time
 import arcade
 import math
 
 from ..game_systems import TextManagementSystem
 from ..level.manager import LevelManager
-from ..settings import GameSettings
+from ..settings import GameSettings, SHADERS_PATH
 from ..draw_helpers import update_ball_path_preview
 from ..game_helpers import shoot_ball
 
@@ -13,7 +14,7 @@ class LevelView(arcade.View, TextManagementSystem):
         super().__init__()
         TextManagementSystem.__init__(self)
 
-        self.level_manager = LevelManager()
+        self.level_manager = LevelManager(self.window)
 
         self.shoot_power = 0
         self.aim_angle = 0
@@ -21,6 +22,16 @@ class LevelView(arcade.View, TextManagementSystem):
         self.aim_preview_list = arcade.SpriteList()
 
         self.mouse_xy = (0, 0)
+
+        self.burst_program = self.window.ctx.load_program(
+            vertex_shader=SHADERS_PATH / "burst.vert",
+            fragment_shader=SHADERS_PATH / "burst.frag",
+        )
+        self.burst_list = []
+
+        self.window.ctx.enable_only(
+            self.window.ctx.BLEND,
+        )
 
     def setup(self, level_index=0, next_level=False):
         self.aim_preview_list.clear()
@@ -47,6 +58,10 @@ class LevelView(arcade.View, TextManagementSystem):
             GameSettings.BALL_RADIUS,
             arcade.color.RED,
         )
+        # Render the bursts
+        for burst in self.burst_list:
+            burst.vao.render(self.burst_program, mode=self.window.ctx.POINTS)
+            print(self.burst_program["time"])
 
     def on_update(self, delta_time):
         self.level_manager.active_level.on_update(delta_time)
@@ -59,6 +74,12 @@ class LevelView(arcade.View, TextManagementSystem):
             self.aim_angle,
             self.shoot_power,
         )
+
+        self.burst_list = [
+            burst for burst in self.burst_list if time.time() - burst.start_time <= 3
+        ]
+        for burst in self.burst_list:
+            self.burst_program["time"] = time.time() - burst.start_time
 
     def on_mouse_motion(self, x, y, dx, dy):
         self.mouse_xy = (x, y)

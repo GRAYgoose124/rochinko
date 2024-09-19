@@ -1,3 +1,4 @@
+from pathlib import Path
 import arcade
 import logging
 
@@ -27,7 +28,11 @@ class __GameSettings(JSONFileWizard):
     SHOW_HIT_COUNTS: bool = True
     LOG_LEVEL: int = logging.DEBUG
     LOG_TO_FILE: bool = False
+    PARTICLE_COUNT: int = 300
+    PARTICLE_LIFETIME: int = 1000
 
+
+SHADERS_PATH: str = Path(__file__).parent / "shaders"
 
 MODIFIER_PALETTE: List[arcade.types.Color] = [
     arcade.color.WHITE_SMOKE,
