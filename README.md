@@ -1,12 +1,13 @@
 # Setup 
 
+Tested on Python 3.12.5
+
 ```bash
-pip install -I https://github.com/pythonarcade/arcade/archive/refs/heads/development.zip
-pip install pymunk dataclass-wizard
+pip install -e .
 ```
 
 # Running
 
 ```bash
-python -m rochinko
+rochinko
 ```

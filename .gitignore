@@ -1,4 +1,4 @@
 *.pyc
+*.egg-info
 rochinko-config.json
 rochinko.log
-
