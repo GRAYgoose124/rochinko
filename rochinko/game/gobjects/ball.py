@@ -2,7 +2,7 @@ import math
 import arcade
 import pymunk
 
-from ..settings import GameSettings
+from ...settings import GameSettings
 
 
 class Ball(arcade.SpriteCircle):

@@ -1,8 +1,8 @@
 import arcade
 
 
-from .modifiers import *
-from .modifiers import Modifier
+from ..modifiers import *
+from ..modifiers import Modifier
 
 
 DEFAULT_BIN_EFFECTS = {

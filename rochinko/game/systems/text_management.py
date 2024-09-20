@@ -1,7 +1,7 @@
 from pyglet.graphics import Batch
 import arcade
 
-from ..settings import GameSettings
+from ...settings import GameSettings
 
 
 class TextManagementSystem:

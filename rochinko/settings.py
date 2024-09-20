@@ -37,7 +37,13 @@ class __GameSettings(JSONFileWizard):
     MIN_FADE_TIME: int = 0.1
 
 
-SHADERS_PATH: str = Path(__file__).parent / "shaders"
+assets_path = Path(__file__).parent / "assets"
+
+
+SOUND_PATHS = {path.stem: path for path in assets_path.glob("sounds/*.mp3")}
+LOADED_SOUNDS = {name: arcade.load_sound(path) for name, path in SOUND_PATHS.items()}
+
+SHADERS_PATH: str = assets_path / "shaders"
 
 MODIFIER_PALETTE: List[arcade.types.Color] = [
     arcade.color.WHITE_SMOKE,

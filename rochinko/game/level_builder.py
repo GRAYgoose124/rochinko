@@ -3,7 +3,7 @@ import random
 import math
 
 from ..settings import GameSettings
-from ..gobjects import Peg, Bomb
+from .gobjects import Peg, Bomb
 
 
 class LevelBuilder:

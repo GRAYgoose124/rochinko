@@ -2,8 +2,8 @@ import pymunk
 import arcade
 import logging
 
-from .builder import LevelBuilder
-from .systems import ScoreSystem
+from .level_builder import LevelBuilder
+from .systems.systems import ScoreSystem
 from .level import Level
 
 log = logging.getLogger(__name__)

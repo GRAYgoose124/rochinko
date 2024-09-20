@@ -4,8 +4,7 @@ import arcade
 import array
 import time
 
-from ..settings import GameSettings
-from ..sound import LOADED_SOUNDS
+from ...settings import GameSettings, LOADED_SOUNDS
 from ..draw_helpers import Burst
 from .peg import Peg
 

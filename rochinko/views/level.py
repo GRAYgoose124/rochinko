@@ -2,11 +2,11 @@ import time
 import arcade
 import math
 
-from ..level.text_management import TextManagementSystem
-from ..level.manager import LevelManager
+from ..game.systems.text_management import TextManagementSystem
+from ..game.level_manager import LevelManager
 from ..settings import GameSettings, SHADERS_PATH
-from ..draw_helpers import update_ball_path_preview
-from ..gobjects.ball import Ball
+from ..game.draw_helpers import update_ball_path_preview
+from ..game.gobjects.ball import Ball
 
 
 class LevelView(arcade.View, TextManagementSystem):

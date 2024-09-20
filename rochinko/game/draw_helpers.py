@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import arcade
 import math
 
-from .settings import GameSettings
+from ..settings import GameSettings
 
 
 def update_ball_path_preview(peg_list, aim_angle, shoot_power):

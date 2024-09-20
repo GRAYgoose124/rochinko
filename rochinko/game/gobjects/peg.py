@@ -1,8 +1,7 @@
 import arcade
 import pymunk
 
-from ..settings import GameSettings
-from ..sound import LOADED_SOUNDS
+from ...settings import GameSettings, LOADED_SOUNDS
 
 
 class Peg(arcade.SpriteCircle):
