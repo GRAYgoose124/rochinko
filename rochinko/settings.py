@@ -14,22 +14,27 @@ log = logging.getLogger(__name__)
 class __GameSettings(JSONFileWizard):
     SCREEN_WIDTH: int = 1280
     SCREEN_HEIGHT: int = 720
-    BALL_RADIUS: int = 10
-    PEG_RADIUS: int = 15
-    GRAVITY: Tuple[float, float] = (0, -500)
-    BOUNCE_DAMPING: float = 0.9
     SHOOTER_Y: int = 660
     SHOOTER_X: int = 640
+
+    BALL_RADIUS: int = 10
     INITIAL_BALL_SPEED: int = 10
+    PEG_RADIUS: int = 15
     PEG_INFLUENCE: float = 0.5
+    GRAVITY: Tuple[float, float] = (0, -500)
+    BOUNCE_DAMPING: float = 0.9
     MIN_SHOOT_POWER: int = 0
     MAX_SHOOT_POWER: int = 1000
+
     ENABLE_TIMINGS: bool = True
     SHOW_HIT_COUNTS: bool = True
     LOG_LEVEL: int = logging.DEBUG
     LOG_TO_FILE: bool = False
+
     PARTICLE_COUNT: int = 300
-    PARTICLE_LIFETIME: int = 1000
+    PARTICLE_LIFETIME: int = 1500
+    MAX_FADE_TIME: int = 3
+    MIN_FADE_TIME: int = 0.1
 
 
 SHADERS_PATH: str = Path(__file__).parent / "shaders"

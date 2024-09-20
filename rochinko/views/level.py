@@ -40,6 +40,8 @@ class LevelView(arcade.View, TextManagementSystem):
 
     def on_draw(self):
         self.clear()
+        self.window.ctx.point_size = 2 * self.window.get_pixel_ratio()
+
         self.level_manager.active_level.draw()
         self.text_list.draw()
         self.aim_preview_list.draw()
@@ -58,10 +60,10 @@ class LevelView(arcade.View, TextManagementSystem):
             GameSettings.BALL_RADIUS,
             arcade.color.RED,
         )
+
         # Render the bursts
         for burst in self.burst_list:
             burst.vao.render(self.burst_program, mode=self.window.ctx.POINTS)
-            print(self.burst_program["time"])
 
     def on_update(self, delta_time):
         self.level_manager.active_level.on_update(delta_time)
