@@ -5,6 +5,7 @@ import array
 import time
 
 from ..settings import GameSettings
+from ..sound import LOADED_SOUNDS
 from ..draw_helpers import Burst
 from .peg import Peg
 
@@ -20,6 +21,7 @@ class Bomb(Peg):
         # trigger explosion
         if self.hit_count >= self.max_hit_count:
             self.explode()
+            arcade.play_sound(LOADED_SOUNDS["explosion"])
             return False
         return True
 

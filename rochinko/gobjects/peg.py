@@ -47,5 +47,5 @@ class Peg(arcade.SpriteCircle):
 
     def on_collision(self, arbiter, space, data):
         self.hit_count += 1
-        arcade.play_sound(LOADED_SOUNDS["clang"])
+        arcade.play_sound(LOADED_SOUNDS["clang"], volume=0.5)
         return True
