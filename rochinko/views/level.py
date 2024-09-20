@@ -2,11 +2,11 @@ import time
 import arcade
 import math
 
-from ..game_systems import TextManagementSystem
+from ..level.text_management import TextManagementSystem
 from ..level.manager import LevelManager
 from ..settings import GameSettings, SHADERS_PATH
 from ..draw_helpers import update_ball_path_preview
-from ..game_helpers import shoot_ball
+from ..gobjects.ball import Ball
 
 
 class LevelView(arcade.View, TextManagementSystem):
@@ -110,7 +110,7 @@ class LevelView(arcade.View, TextManagementSystem):
             self.aiming = False
 
             if len(self.level_manager.active_level.ball_list) < 3:
-                shoot_ball(
+                Ball.shoot(
                     self.level_manager.active_level, self.aim_angle, self.shoot_power
                 )
 

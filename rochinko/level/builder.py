@@ -3,7 +3,7 @@ import random
 import math
 
 from ..settings import GameSettings
-from ..objects import Peg, Bomb
+from ..gobjects import Peg, Bomb
 
 
 class LevelBuilder:
@@ -66,7 +66,7 @@ class LevelBuilder:
                     start_y + amplitude * math.sin(t * 0.05),
                 )
 
-            peg = Peg(x, y, circular_movement)
+            peg = Peg(x, y, movement_function=circular_movement)
             pegs.append(peg)
         return pegs
 
@@ -96,7 +96,7 @@ class LevelBuilder:
                     + (start_y - center_y) * math.cos(angle),
                 )
 
-            peg = Peg(x, y, rotating_movement)
+            peg = Peg(x, y, movement_function=rotating_movement)
             pegs.append(peg)
         return pegs
 
@@ -119,6 +119,6 @@ class LevelBuilder:
                     start_y + amplitude * math.cos(t * 0.004 + random.random()),
                 )
 
-            peg = Peg(x, y, random_movement)
+            peg = Peg(x, y, movement_function=random_movement)
             pegs.append(peg)
         return pegs

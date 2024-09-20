@@ -3,8 +3,10 @@ import arcade
 import logging
 
 from ..settings import MODIFIER_PALETTE, GameSettings
-from ..objects import Obstacle
-from .systems import ScoreSystem, ModifierSystem, CollisionSystem
+from ..gobjects import Obstacle
+from .systems import ScoreSystem, ModifierSystem
+from .collision_system import CollisionSystem
+
 
 
 log = logging.getLogger(__name__)
