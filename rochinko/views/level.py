@@ -63,6 +63,7 @@ class LevelView(arcade.View, TextManagementSystem):
 
         # Render the bursts
         for burst in self.burst_list:
+            self.burst_program["time"] = burst.time
             burst.vao.render(self.burst_program, mode=self.window.ctx.POINTS)
 
     def on_update(self, delta_time):
@@ -77,11 +78,12 @@ class LevelView(arcade.View, TextManagementSystem):
             self.shoot_power,
         )
 
-        self.burst_list = [
-            burst for burst in self.burst_list if time.time() - burst.start_time <= 3
-        ]
+        new_burst_list = []
         for burst in self.burst_list:
-            self.burst_program["time"] = time.time() - burst.start_time
+            burst.time = time.time() - burst.start_time
+            if burst.time < 3:
+                new_burst_list.append(burst)
+        self.burst_list = new_burst_list
 
     def on_mouse_motion(self, x, y, dx, dy):
         self.mouse_xy = (x, y)

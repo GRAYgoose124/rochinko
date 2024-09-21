@@ -45,3 +45,4 @@ class Burst:
     buffer: arcade.gl.Buffer
     vao: arcade.gl.Geometry
     start_time: float
+    time: float = 0

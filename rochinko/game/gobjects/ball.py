@@ -20,7 +20,7 @@ class Ball(arcade.SpriteCircle):
         self.body.position = x, y
         self.shape = pymunk.Circle(self.body, radius)
         self.shape.elasticity = 0.9
-        self.shape.friction = 0.4
+        self.shape.friction = 0.1
         self.modifiers = []
 
     def update(self, delta_time):
