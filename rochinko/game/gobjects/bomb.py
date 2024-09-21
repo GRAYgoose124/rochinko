@@ -10,8 +10,8 @@ from .peg import Peg
 
 
 class Bomb(Peg):
-    def __init__(self, x, y, window):
-        super().__init__(x, y, arcade.color.RED)
+    def __init__(self, x, y, window, movement_function=None):
+        super().__init__(x, y, arcade.color.RED, movement_function)
         self.window = window
         self.max_hit_count = 2
 
@@ -36,8 +36,6 @@ class Bomb(Peg):
         arcade.play_sound(LOADED_SOUNDS["explosion"])
 
     def _start_explosion(self):
-        """User clicks mouse"""
-
         def _gen_initial_data(initial_x, initial_y):
             """Generate data for each particle"""
             for i in range(GameSettings.PARTICLE_COUNT):

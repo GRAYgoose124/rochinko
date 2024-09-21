@@ -43,7 +43,10 @@ class LevelBuilder:
                     + (column - (9 - abs(row - 4)) / 2) * 50
                 )
                 y = GameSettings.SCREEN_HEIGHT - 100 - row * 50
-                peg = Peg(x, y)
+                if random.random() < 0.1:
+                    peg = Bomb(x, y, window)
+                else:
+                    peg = Peg(x, y)
                 pegs.append(peg)
         return pegs
 
@@ -66,7 +69,10 @@ class LevelBuilder:
                     start_y + amplitude * math.sin(t * 0.05),
                 )
 
-            peg = Peg(x, y, movement_function=circular_movement)
+            if random.random() < 0.1:
+                peg = Bomb(x, y, window, movement_function=circular_movement)
+            else:
+                peg = Peg(x, y, movement_function=circular_movement)
             pegs.append(peg)
         return pegs
 
@@ -96,7 +102,10 @@ class LevelBuilder:
                     + (start_y - center_y) * math.cos(angle),
                 )
 
-            peg = Peg(x, y, movement_function=rotating_movement)
+            if random.random() < 0.1:
+                peg = Bomb(x, y, window, movement_function=rotating_movement)
+            else:
+                peg = Peg(x, y, movement_function=rotating_movement)
             pegs.append(peg)
         return pegs
 
@@ -119,6 +128,9 @@ class LevelBuilder:
                     start_y + amplitude * math.cos(t * 0.004 + random.random()),
                 )
 
-            peg = Peg(x, y, movement_function=random_movement)
+            if random.random() < 0.1:
+                peg = Bomb(x, y, window, movement_function=random_movement)
+            else:
+                peg = Peg(x, y, movement_function=random_movement)
             pegs.append(peg)
         return pegs

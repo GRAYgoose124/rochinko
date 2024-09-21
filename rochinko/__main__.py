@@ -1,10 +1,9 @@
-# main.py
 import arcade
 import logging
 
 from .settings import GameSettings
 from .views.level import LevelView
-from .views.menu import MenuView  # We'll create this later
+from .views.menu import MenuView
 
 
 class RochinkoApp(arcade.Window):

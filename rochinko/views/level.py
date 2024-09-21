@@ -68,9 +68,11 @@ class LevelView(arcade.View, TextManagementSystem):
 
     def on_update(self, delta_time):
         self.level_manager.active_level.on_update(delta_time)
-        self.score_text.text = f"Score: {self.level_manager.active_level.score}, total: {self.level_manager.score}"
-        if self.fps_text:
-            self.fps_text.text = f"FPS: {arcade.get_fps():.0f}"
+        self.texts["score"].text = (
+            f"Score: {self.level_manager.active_level.score}, total: {self.level_manager.score}"
+        )
+        if self.texts["fps"]:
+            self.texts["fps"].text = f"FPS: {arcade.get_fps():.0f}"
 
         self.aim_preview_list = update_ball_path_preview(
             self.level_manager.active_level.peg_list,
@@ -97,7 +99,7 @@ class LevelView(arcade.View, TextManagementSystem):
             max(distance, GameSettings.MIN_SHOOT_POWER),
             GameSettings.MAX_SHOOT_POWER,
         )
-        self.power_text.text = f"Power: {self.shoot_power:.0f}"
+        self.texts["power"].text = f"Power: {self.shoot_power:.0f}"
 
     def on_mouse_press(self, x, y, button, modifiers):
         if button == arcade.MOUSE_BUTTON_LEFT:

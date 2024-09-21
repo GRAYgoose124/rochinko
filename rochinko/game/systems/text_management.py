@@ -7,14 +7,16 @@ from ...settings import GameSettings
 class TextManagementSystem:
     def __init__(self):
         self.text_list = None
-        self.power_text = None
-        self.score_text = None
-        self.fps_text = None
+        self.texts = {
+            "power": None,
+            "score": None,
+            "fps": None,
+        }
 
     def setup_texts(self):
         self.text_list = Batch()
 
-        self.power_text = arcade.Text(
+        self.texts["power"] = arcade.Text(
             f"Power: {self.shoot_power:.0f}",
             GameSettings.SHOOTER_X,
             GameSettings.SHOOTER_Y - 30,
@@ -23,7 +25,7 @@ class TextManagementSystem:
             anchor_x="center",
             batch=self.text_list,
         )
-        self.score_text = arcade.Text(
+        self.texts["score"] = arcade.Text(
             f"Score: {self.level_manager.active_level.score}",
             GameSettings.SHOOTER_X,
             GameSettings.SHOOTER_Y + 30,
@@ -33,7 +35,7 @@ class TextManagementSystem:
             batch=self.text_list,
         )
         if GameSettings.ENABLE_TIMINGS:
-            self.fps_text = arcade.Text(
+            self.texts["fps"] = arcade.Text(
                 f"FPS: {arcade.get_fps():.0f}",
                 GameSettings.SCREEN_WIDTH - 40,
                 GameSettings.SCREEN_HEIGHT - 20,
