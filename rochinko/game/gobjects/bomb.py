@@ -19,12 +19,23 @@ class Bomb(Peg):
         super().on_collision(arbiter, space, data)
         # trigger explosion
         if self.hit_count >= self.max_hit_count:
-            self.explode()
-            arcade.play_sound(LOADED_SOUNDS["explosion"])
+            ball = arbiter.shapes[0].body
+            self.explode(ball)
             return False
         return True
 
-    def explode(self):
+    def explode(self, ball):
+        dx = ball.position.x - self.center_x
+        dy = ball.position.y - self.center_y
+
+        length = math.sqrt(dx**2 + dy**2)
+        dx, dy = dx / length, dy / length
+        force = 35000
+        self._start_explosion()
+        ball.apply_force_at_local_point((dx * force, dy * force), (0, 0))
+        arcade.play_sound(LOADED_SOUNDS["explosion"])
+
+    def _start_explosion(self):
         """User clicks mouse"""
 
         def _gen_initial_data(initial_x, initial_y):
