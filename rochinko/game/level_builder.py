@@ -65,8 +65,8 @@ class LevelBuilder:
 
             def circular_movement(t, start_x=x, start_y=y, amplitude=30):
                 return (
-                    start_x + amplitude * math.cos(t * 0.05),
-                    start_y + amplitude * math.sin(t * 0.05),
+                    start_x + amplitude * math.cos(t * 4.5),
+                    start_y + amplitude * math.sin(t * 4.5),
                 )
 
             if random.random() < 0.1:
@@ -92,7 +92,7 @@ class LevelBuilder:
             # TODO better and more consistent movement function
             def rotating_movement(t, start_x=x, start_y=y, amplitude=20):
                 # rotate the pegs as a group around the center
-                angle = -t * 0.1
+                angle = -t * 0.75
                 return (
                     center_x
                     + (start_x - center_x) * math.cos(angle)

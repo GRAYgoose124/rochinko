@@ -7,12 +7,15 @@ from .views.menu import MenuView
 
 
 class RochinkoApp(arcade.Window):
+
     def __init__(self):
         super().__init__(
             GameSettings.SCREEN_WIDTH,
             GameSettings.SCREEN_HEIGHT,
             "Pachinko Game",
             resizable=True,
+            draw_rate=1 / GameSettings.SCREEN_REFRESH_RATE,
+            fixed_rate=1 / GameSettings.SCREEN_REFRESH_RATE,
         )
         self.level_view = None
         self.menu_view = None

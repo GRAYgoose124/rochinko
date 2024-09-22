@@ -3,7 +3,7 @@ import arcade
 import logging
 
 from .level_builder import LevelBuilder
-from .systems.systems import ScoreSystem
+from .systems.score import ScoreSystem
 from .level import Level
 
 log = logging.getLogger(__name__)
@@ -35,7 +35,7 @@ class LevelManager(ScoreSystem):
         new_level = Level()
         if level_idx < len(self.level_builders):
             pegs = self.level_builders[level_idx](self.window)
-            new_level.add_pegs(pegs)
+            new_level.add_gobjects(pegs, gtype="peg", collision_type=2)
             log.info(f"Loaded level {level_idx}")
         else:
             log.info("No more levels available")

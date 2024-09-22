@@ -1,6 +1,5 @@
 import arcade
 
-
 from ..modifiers import *
 from ..modifiers import Modifier
 
@@ -44,11 +43,3 @@ class ModifierSystem:
         if modifier in ball.modifiers:
             modifier.remove(ball)
             ball.modifiers.remove(modifier)
-
-
-class ScoreSystem:
-    def __init__(self):
-        self.score = 0
-
-    def add_score(self, score):
-        self.score += score

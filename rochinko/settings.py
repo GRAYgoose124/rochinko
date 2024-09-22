@@ -14,6 +14,10 @@ log = logging.getLogger(__name__)
 class __GameSettings(JSONFileWizard):
     SCREEN_WIDTH: int = 1280
     SCREEN_HEIGHT: int = 720
+    SCREEN_REFRESH_RATE: int = 60
+
+    SPACE_STEP_MULTIPLIER: int = 2
+
     SHOOTER_Y: int = 660
     SHOOTER_X: int = 640
 

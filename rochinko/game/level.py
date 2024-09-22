@@ -4,7 +4,8 @@ import logging
 
 from ..settings import MODIFIER_PALETTE, GameSettings
 from .gobjects import Obstacle
-from .systems.systems import ScoreSystem, ModifierSystem
+from .systems.score import ScoreSystem
+from .systems.modifier import ModifierSystem
 from .systems.collision import CollisionSystem
 
 
@@ -37,18 +38,30 @@ class Level(CollisionSystem, ModifierSystem, ScoreSystem):
                 (i + 0.5) * (GameSettings.SCREEN_WIDTH / 10),
                 25,
             )
-            self.space.add(bin.body, bin.shape)
-            bin.shape.collision_type = 3  # Assign collision type for bins
-            bin.body.sprite = bin  # Store sprite reference in body
             bin.color = MODIFIER_PALETTE[i % len(MODIFIER_PALETTE)]
-            self.bin_list.append(bin)
 
-    def add_pegs(self, pegs):
-        for p in pegs:
-            p.shape.collision_type = 2  # Assign collision type for pegs
-            p.body.sprite = p  # Store sprite reference in body
-            self.peg_list.append(p)
-            self.space.add(p.body, p.shape)
+            self.add_gobject(bin, gtype="bin", collision_type=3)
+
+    def add_gobject(self, gobject, gtype=None, collision_type=None):
+        if collision_type is not None:
+            gobject.shape.collision_type = collision_type
+            gobject.body.sprite = gobject  # Store sprite reference in body
+            self.space.add(gobject.body, gobject.shape)
+
+        if gtype == "peg":
+            self.peg_list.append(gobject)
+        elif gtype == "bin":
+            self.bin_list.append(gobject)
+        elif gtype == "ball":
+            self.ball_list.append(gobject)
+        elif gtype == "obstacle":
+            self.obstacle_list.append(gobject)
+        else:
+            raise ValueError(f"Unknown gtype: {gtype}")
+
+    def add_gobjects(self, gobjects, gtype=None, collision_type=None):
+        for p in gobjects:
+            self.add_gobject(p, gtype, collision_type)
 
     def draw(self):
         self.peg_list.draw()
@@ -57,7 +70,7 @@ class Level(CollisionSystem, ModifierSystem, ScoreSystem):
         # self.obstacle_list.draw()
 
     def on_update(self, delta_time):
-        for _ in range(self.space_steps * 2):
+        for _ in range(self.space_steps * GameSettings.SPACE_STEP_MULTIPLIER):
             self.space.step(delta_time)
         self.peg_list.update(delta_time)
         self.ball_list.update(delta_time)
