@@ -1,15 +1,15 @@
 import arcade
-
 from ..settings import GameSettings
 
 
-class MenuView(arcade.View):
-    def __init__(self):
+class PauseView(arcade.View):
+    def __init__(self, game_view):
         super().__init__()
-        self.text_items = ["Rochinko", "1. Start Game", "2. Show Map", "3. Quit"]
+        self.game_view = game_view
+        self.text_items = ["Paused", "1. Resume", "2. Return to Menu", "3. Quit"]
 
     def on_show(self):
-        arcade.set_background_color(arcade.color.DARK_BLUE)
+        arcade.set_background_color(arcade.color.DARK_SLATE_GRAY)
 
     def on_draw(self):
         self.clear()
@@ -25,11 +25,8 @@ class MenuView(arcade.View):
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.KEY_1:
-            level_view = self.window.level_view
-            level_view.setup()
-            self.window.show_view(level_view)
+            self.window.show_view(self.game_view)
         elif key == arcade.key.KEY_2:
-            map_view = self.window.map_view
-            self.window.show_view(map_view)
+            self.window.show_view(self.window.menu_view)
         elif key == arcade.key.KEY_3:
             arcade.close_window()

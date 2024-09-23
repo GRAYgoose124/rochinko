@@ -4,21 +4,24 @@ import logging
 from .settings import GameSettings
 from .views.level import LevelView
 from .views.menu import MenuView
+from .views.map import MapView
+from .views.pause import PauseView
 
 
 class RochinkoApp(arcade.Window):
-
     def __init__(self):
         super().__init__(
             GameSettings.SCREEN_WIDTH,
             GameSettings.SCREEN_HEIGHT,
-            "Pachinko Game",
+            "Rouginko",
             resizable=True,
             draw_rate=1 / GameSettings.SCREEN_REFRESH_RATE,
             fixed_rate=1 / GameSettings.SCREEN_REFRESH_RATE,
         )
         self.level_view = None
         self.menu_view = None
+        self.map_view = None
+        self.pause_view = None
 
         if GameSettings.ENABLE_TIMINGS:
             arcade.enable_timings()
@@ -28,6 +31,8 @@ class RochinkoApp(arcade.Window):
     def setup(self):
         self.level_view = LevelView()
         self.menu_view = MenuView()
+        self.map_view = MapView()
+        self.pause_view = PauseView(self.level_view)
         self.show_view(self.menu_view)
 
     def on_resize(self, width, height):

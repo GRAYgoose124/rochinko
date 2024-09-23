@@ -26,8 +26,6 @@ class Level(CollisionSystem, ModifierSystem, ScoreSystem):
         self.bin_list = arcade.SpriteList()
         self.obstacle_list = arcade.SpriteList()
 
-        self.space_steps = 1
-
         self.__init_bins()
 
     def __init_bins(self):
@@ -70,7 +68,7 @@ class Level(CollisionSystem, ModifierSystem, ScoreSystem):
         # self.obstacle_list.draw()
 
     def on_update(self, delta_time):
-        for _ in range(self.space_steps * GameSettings.SPACE_STEP_MULTIPLIER):
+        for _ in range(GameSettings.SPACE_STEPS * GameSettings.SPACE_STEP_MULTIPLIER):
             self.space.step(delta_time)
         self.peg_list.update(delta_time)
         self.ball_list.update(delta_time)

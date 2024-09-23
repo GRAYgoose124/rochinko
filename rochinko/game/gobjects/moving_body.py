@@ -1,5 +1,7 @@
 import pymunk
 
+from rochinko.settings import GameSettings
+
 
 class MovingBody:
     def __init__(self, x, y, shape=None, movement_function=None):
@@ -14,7 +16,7 @@ class MovingBody:
 
     def update_position(self, delta_time):
         if self.movement_function:
-            self.time += delta_time
+            self.time += delta_time * GameSettings.SPACE_STEPS
             self.body.position = self.movement_function(self.time)
         self.center_x = self.body.position.x
         self.center_y = self.body.position.y

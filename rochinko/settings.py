@@ -16,6 +16,7 @@ class __GameSettings(JSONFileWizard):
     SCREEN_HEIGHT: int = 720
     SCREEN_REFRESH_RATE: int = 60
 
+    SPACE_STEPS: int = 1
     SPACE_STEP_MULTIPLIER: int = 2
 
     SHOOTER_Y: int = 660
