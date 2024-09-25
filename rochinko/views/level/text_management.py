@@ -11,6 +11,7 @@ class TextManagementSystem:
             "power": None,
             "score": None,
             "fps": None,
+            "space_steps": None,
         }
 
     def setup_texts(self):
@@ -34,6 +35,16 @@ class TextManagementSystem:
             anchor_x="center",
             batch=self.text_list,
         )
+        self.texts["space_steps"] = arcade.Text(
+            f"{GameSettings.SPACE_STEPS}x",
+            20,
+            GameSettings.SCREEN_HEIGHT - 20,
+            arcade.color.WHITE,
+            12,
+            anchor_x="center",
+            batch=self.text_list,
+        )
+
         if GameSettings.ENABLE_TIMINGS:
             self.texts["fps"] = arcade.Text(
                 f"FPS: {arcade.get_fps():.0f}",
@@ -57,3 +68,6 @@ class TextManagementSystem:
                     anchor_y="center",
                     batch=self.text_list,
                 )
+
+    def draw_texts(self):
+        self.text_list.draw()

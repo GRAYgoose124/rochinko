@@ -2,12 +2,12 @@ import time
 import arcade
 import math
 
-from ..settings import GameSettings, SHADERS_PATH
-from ..game.systems.text_management import TextManagementSystem
-from ..game.level_manager import LevelManager
-from ..game.draw_helpers import update_ball_path_preview
-from ..game.gobjects.ball import Ball
-from .pause import PauseView
+from ...settings import GameSettings, SHADERS_PATH
+from .text_management import TextManagementSystem
+from ...game.level_manager import LevelManager
+from ...game.draw_helpers import update_ball_path_preview
+from ...game.gobjects.ball import Ball
+from ..pause import PauseView
 
 
 class LevelView(arcade.View, TextManagementSystem):
@@ -47,8 +47,9 @@ class LevelView(arcade.View, TextManagementSystem):
         self.window.ctx.point_size = 2 * self.window.get_pixel_ratio()
 
         self.level_manager.active_level.draw()
-        self.text_list.draw()
         self.aim_preview_list.draw()
+        self.draw_texts()
+
         if self.aiming:
             arcade.draw_line(
                 GameSettings.SHOOTER_X,
@@ -125,6 +126,8 @@ class LevelView(arcade.View, TextManagementSystem):
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol == arcade.key.SPACE:
             GameSettings.SPACE_STEPS = (GameSettings.SPACE_STEPS + 1) % 5
+            self.texts["space_steps"].text = f"{GameSettings.SPACE_STEPS}x"
+
         elif symbol == arcade.key.ESCAPE:
             self.window.show_view(self.pause_view)
 

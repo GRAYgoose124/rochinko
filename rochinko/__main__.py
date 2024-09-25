@@ -2,7 +2,7 @@ import arcade
 import logging
 
 from .settings import GameSettings
-from .views.level import LevelView
+from .views.level.view import LevelView
 from .views.menu import MenuView
 from .views.map import MapView
 from .views.pause import PauseView
