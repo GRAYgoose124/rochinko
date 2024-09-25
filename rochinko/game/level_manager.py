@@ -34,6 +34,6 @@ class LevelManager(ScoreSystem):
     def load_level(self, level_idx):
         if level_idx < len(self.level_builders):
             log.info(f"Loaded level {level_idx}")
-            return self.level_builders[level_idx](self.window)
+            return self.level_builders[level_idx]()
         else:
             log.info("No more levels available")

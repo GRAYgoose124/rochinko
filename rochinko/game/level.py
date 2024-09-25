@@ -28,6 +28,16 @@ class Level(CollisionSystem, ModifierSystem, ScoreSystem):
             "obstacle": arcade.SpriteList(),
         }
 
+    def on_update(self, delta_time):
+        """Use like an arcade method"""
+        # Game physics update
+        for _ in range(GameSettings.SPACE_STEPS * GameSettings.SPACE_STEP_MULTIPLIER):
+            self.space.step(delta_time)
+
+        # Sprite updates
+        for sprite_list in self.gobjects.values():
+            sprite_list.update(delta_time)
+
     def add_gobject(self, gobject, collide=True):
         gtype = None
         collision_type = None
@@ -62,12 +72,3 @@ class Level(CollisionSystem, ModifierSystem, ScoreSystem):
     def draw(self):
         for sprite_list in self.gobjects.values():
             sprite_list.draw()
-
-    def on_update(self, delta_time):
-        # Game physics update
-        for _ in range(GameSettings.SPACE_STEPS * GameSettings.SPACE_STEP_MULTIPLIER):
-            self.space.step(delta_time)
-
-        # Sprite updates
-        for sprite_list in self.gobjects.values():
-            sprite_list.update(delta_time)

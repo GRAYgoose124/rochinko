@@ -12,7 +12,7 @@ from .peg import Peg
 class Bomb(Peg):
     def __init__(self, x, y, window=None, movement_function=None):
         super().__init__(x, y, arcade.color.RED, movement_function)
-        self.window = window
+        self.window = window or arcade.get_window()
         self.max_hit_count = 2
 
     def on_collision(self, arbiter, space, data):

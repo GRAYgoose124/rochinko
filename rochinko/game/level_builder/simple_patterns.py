@@ -2,14 +2,14 @@ import arcade
 import random
 import math
 
-from ..settings import GameSettings, MODIFIER_PALETTE
-from .gobjects import Peg, Bomb, Obstacle, Bin
-from .level import Level
+from ...settings import GameSettings
+from ..gobjects import Peg, Bomb, Obstacle, Bin
+from ..level import Level
 
 
-class PatternBuilder:
+class PegPatternBuilder:
     @staticmethod
-    def create_triangle_pattern(window):
+    def create_triangle_pattern():
         pegs = arcade.SpriteList()
         for row in range(1, 20):
             for column in range(row):
@@ -18,14 +18,14 @@ class PatternBuilder:
                 )
                 y = GameSettings.SCREEN_HEIGHT - (row * 30)
                 if random.random() < 0.1:
-                    peg = Bomb(x, y, window)
+                    peg = Bomb(x, y)
                 else:
                     peg = Peg(x, y)
                 pegs.append(peg)
         return pegs
 
     @staticmethod
-    def create_diamond_pattern(window):
+    def create_diamond_pattern():
         pegs = arcade.SpriteList()
         for row in range(10):
             for column in range(10 - abs(row - 4)):
@@ -35,14 +35,14 @@ class PatternBuilder:
                 )
                 y = GameSettings.SCREEN_HEIGHT - 100 - row * 50
                 if random.random() < 0.1:
-                    peg = Bomb(x, y, window)
+                    peg = Bomb(x, y)
                 else:
                     peg = Peg(x, y)
                 pegs.append(peg)
         return pegs
 
     @staticmethod
-    def create_circular_pattern(window):
+    def create_circular_pattern():
         pegs = arcade.SpriteList()
         center_x, center_y = (
             GameSettings.SCREEN_WIDTH / 2,
@@ -61,14 +61,14 @@ class PatternBuilder:
                 )
 
             if random.random() < 0.1:
-                peg = Bomb(x, y, window, movement_function=circular_movement)
+                peg = Bomb(x, y, movement_function=circular_movement)
             else:
                 peg = Peg(x, y, movement_function=circular_movement)
             pegs.append(peg)
         return pegs
 
     @staticmethod
-    def create_spiral_pattern(window):
+    def create_spiral_pattern():
         pegs = arcade.SpriteList()
         center_x, center_y = (
             GameSettings.SCREEN_WIDTH / 2,
@@ -94,14 +94,14 @@ class PatternBuilder:
                 )
 
             if random.random() < 0.1:
-                peg = Bomb(x, y, window, movement_function=rotating_movement)
+                peg = Bomb(x, y, movement_function=rotating_movement)
             else:
                 peg = Peg(x, y, movement_function=rotating_movement)
             pegs.append(peg)
         return pegs
 
     @staticmethod
-    def create_random_pattern(window):
+    def create_random_pattern():
         pegs = arcade.SpriteList()
         for _ in range(50):
             x = random.randint(
@@ -120,58 +120,16 @@ class PatternBuilder:
                 )
 
             if random.random() < 0.1:
-                peg = Bomb(x, y, window, movement_function=random_movement)
+                peg = Bomb(x, y, movement_function=random_movement)
             else:
                 peg = Peg(x, y, movement_function=random_movement)
             pegs.append(peg)
         return pegs
 
 
-class LevelBuilder:
+class ObstaclePatternBuilder:
     @staticmethod
-    def all_builders():
-        return [
-            LevelBuilder.create_triangle_level,
-            LevelBuilder.create_diamond_level,
-            LevelBuilder.create_circular_level,
-            LevelBuilder.create_spiral_level,
-            LevelBuilder.create_random_level,
-        ]
-
-    @staticmethod
-    def create_level(pattern_func, window):
-        level = Level()
-
-        # Add pegs
-        pegs = pattern_func(window)
-        level.add_gobjects(pegs, "peg")
-
-        # Add bins
-        bins = LevelBuilder.create_bins()
-        level.add_gobjects(bins, "bin")
-
-        # Add obstacles
-        obstacles = LevelBuilder.create_obstacles()
-        level.add_gobjects(obstacles, "obstacle")
-
-        return level
-
-    @staticmethod
-    def create_bins():
-        bins = []
-        for i in range(10):
-            bin = Bin(
-                int(GameSettings.SCREEN_WIDTH / 10),
-                20,
-                (i + 0.5) * (GameSettings.SCREEN_WIDTH / 10),
-                25,
-            )
-            bin.color = MODIFIER_PALETTE[i % len(MODIFIER_PALETTE)]
-            bins.append(bin)
-        return bins
-
-    @staticmethod
-    def create_obstacles():
+    def create_random_obstacles():
         obstacles = []
         for _ in range(3):
             x = random.randint(0, GameSettings.SCREEN_WIDTH)
@@ -185,26 +143,64 @@ class LevelBuilder:
         return obstacles
 
     @staticmethod
-    def create_triangle_level(window):
-        return LevelBuilder.create_level(PatternBuilder.create_triangle_pattern, window)
+    def create_horizontal_obstacles():
+        obstacles = []
+        for i in range(3):
+            y = GameSettings.SCREEN_HEIGHT // 2 + i * 100
+            width = random.randint(100, 200)
+            height = 20
+            x = random.randint(0, GameSettings.SCREEN_WIDTH - width)
+            obstacle = Obstacle(width, height, x, y)
+            obstacles.append(obstacle)
+        return obstacles
 
     @staticmethod
-    def create_diamond_level(window):
-        return LevelBuilder.create_level(PatternBuilder.create_diamond_pattern, window)
+    def create_vertical_obstacles():
+        obstacles = []
+        for i in range(2):
+            x = GameSettings.SCREEN_WIDTH // 3 + i * (GameSettings.SCREEN_WIDTH // 3)
+            width = 20
+            height = random.randint(100, 200)
+            y = random.randint(
+                GameSettings.SCREEN_HEIGHT // 2, GameSettings.SCREEN_HEIGHT - height
+            )
+            obstacle = Obstacle(width, height, x, y)
+            obstacles.append(obstacle)
+        return obstacles
 
     @staticmethod
-    def create_circular_level(window):
-        return LevelBuilder.create_level(PatternBuilder.create_circular_pattern, window)
+    def create_circular_obstacles():
+        obstacles = []
+        center_x, center_y = (
+            GameSettings.SCREEN_WIDTH // 2,
+            GameSettings.SCREEN_HEIGHT // 2,
+        )
+        radius = 250
+        num_obstacles = 8
+        for i in range(num_obstacles):
+            angle = i * (2 * math.pi / num_obstacles)
+            x = center_x + radius * math.cos(angle)
+            y = center_y + radius * math.sin(angle)
+            width = 30
+            height = 30
+            obstacle = Obstacle(width, height, x, y)
+            obstacles.append(obstacle)
+        return obstacles
 
     @staticmethod
-    def create_spiral_level(window):
-        return LevelBuilder.create_level(PatternBuilder.create_spiral_pattern, window)
-
-    @staticmethod
-    def create_random_level(window):
-        return LevelBuilder.create_level(PatternBuilder.create_random_pattern, window)
-
-
-class ProceduralLevelBuilder:
-    # TODO: We will also generate obstacles, collectibles, etc.
-    ...
+    def create_spiral_obstacles():
+        obstacles = []
+        center_x, center_y = (
+            GameSettings.SCREEN_WIDTH // 2,
+            GameSettings.SCREEN_HEIGHT // 2,
+        )
+        for i in range(5):
+            angle = i * 1.5
+            radius = 100 + i * 30
+            x = center_x + radius * math.cos(angle)
+            y = center_y + radius * math.sin(angle)
+            width = 40
+            height = 40
+            obstacle = Obstacle(width, height, x, y)
+            obstacles.append(obstacle)
+        return obstacles
