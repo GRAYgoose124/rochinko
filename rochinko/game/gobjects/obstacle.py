@@ -1,6 +1,6 @@
 import arcade
 import pymunk
-from .moving_body import MovingBody
+from .mixins.moving_body import MovingBody
 
 
 class Obstacle(arcade.SpriteSolidColor, MovingBody):

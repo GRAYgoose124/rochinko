@@ -21,10 +21,12 @@ class Level(CollisionSystem, ModifierSystem, ScoreSystem):
         self.space = pymunk.Space()
         self.space.gravity = GameSettings.GRAVITY
 
-        self.ball_list = arcade.SpriteList()
-        self.peg_list = arcade.SpriteList()
-        self.bin_list = arcade.SpriteList()
-        self.obstacle_list = arcade.SpriteList()
+        self.gobjects = {
+            "ball": arcade.SpriteList(),
+            "peg": arcade.SpriteList(),
+            "bin": arcade.SpriteList(),
+            "obstacle": arcade.SpriteList(),
+        }
 
         self.__init_bins()
 
@@ -42,18 +44,13 @@ class Level(CollisionSystem, ModifierSystem, ScoreSystem):
 
     def add_gobject(self, gobject, gtype=None, collision_type=None):
         if collision_type is not None:
+            assert isinstance(collision_type, int), "collision_type must be an integer"
             gobject.shape.collision_type = collision_type
-            gobject.body.sprite = gobject  # Store sprite reference in body
+            gobject.body.sprite = gobject
             self.space.add(gobject.body, gobject.shape)
 
-        if gtype == "peg":
-            self.peg_list.append(gobject)
-        elif gtype == "bin":
-            self.bin_list.append(gobject)
-        elif gtype == "ball":
-            self.ball_list.append(gobject)
-        elif gtype == "obstacle":
-            self.obstacle_list.append(gobject)
+        if gtype in self.gobjects:
+            self.gobjects[gtype].append(gobject)
         else:
             raise ValueError(f"Unknown gtype: {gtype}")
 
@@ -62,15 +59,11 @@ class Level(CollisionSystem, ModifierSystem, ScoreSystem):
             self.add_gobject(p, gtype, collision_type)
 
     def draw(self):
-        self.peg_list.draw()
-        self.ball_list.draw()
-        self.bin_list.draw()
-        # self.obstacle_list.draw()
+        for sprite_list in self.gobjects.values():
+            sprite_list.draw()
 
     def on_update(self, delta_time):
         for _ in range(GameSettings.SPACE_STEPS * GameSettings.SPACE_STEP_MULTIPLIER):
             self.space.step(delta_time)
-        self.peg_list.update(delta_time)
-        self.ball_list.update(delta_time)
-        # bin_list.update(delta_time)
-        # self.obstacle_list.update(delta_time)
+        for sprite_list in self.gobjects.values():
+            sprite_list.update(delta_time)

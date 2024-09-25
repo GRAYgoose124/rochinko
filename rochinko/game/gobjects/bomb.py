@@ -30,7 +30,7 @@ class Bomb(Peg):
 
         length = math.sqrt(dx**2 + dy**2)
         dx, dy = dx / length, dy / length
-        force = 35000
+        force = 15000
         self._start_explosion()
         ball.apply_force_at_local_point((dx * force, dy * force), (0, 0))
         arcade.play_sound(LOADED_SOUNDS["explosion"])

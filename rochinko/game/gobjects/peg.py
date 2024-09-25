@@ -2,7 +2,7 @@ import arcade
 import pymunk
 
 from ...settings import GameSettings, LOADED_SOUNDS
-from .moving_body import MovingBody
+from .mixins.moving_body import MovingBody
 
 
 class Peg(arcade.SpriteCircle, MovingBody):
@@ -44,3 +44,5 @@ class Peg(arcade.SpriteCircle, MovingBody):
         self.hit_count += 1
         arcade.play_sound(LOADED_SOUNDS["clang"], volume=0.5)
         return True
+
+

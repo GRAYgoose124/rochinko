@@ -57,7 +57,7 @@ class TextManagementSystem:
             )
         # Add hit count text to pegs
         if GameSettings.SHOW_HIT_COUNTS and self.level_manager.active_level:
-            for peg in self.level_manager.active_level.peg_list:
+            for peg in self.level_manager.active_level.gobjects["peg"]:
                 peg.text = arcade.Text(
                     str(peg.hit_count),
                     peg.center_x,

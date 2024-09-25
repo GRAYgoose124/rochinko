@@ -24,7 +24,8 @@ class LevelView(arcade.View, TextManagementSystem):
 
         self.mouse_xy = (0, 0)
 
-        self.burst_program = self.window.ctx.load_program(
+        self.programs = {}
+        self.programs["burst"] = self.window.ctx.load_program(
             vertex_shader=SHADERS_PATH / "burst.vert",
             fragment_shader=SHADERS_PATH / "burst.frag",
         )
@@ -68,8 +69,8 @@ class LevelView(arcade.View, TextManagementSystem):
 
         # Render the bursts
         for burst in self.burst_list:
-            self.burst_program["time"] = burst.time
-            burst.vao.render(self.burst_program, mode=self.window.ctx.POINTS)
+            self.programs["burst"]["time"] = burst.time
+            burst.vao.render(self.programs["burst"], mode=self.window.ctx.POINTS)
 
     def on_update(self, delta_time):
         self.level_manager.active_level.on_update(delta_time)
@@ -80,7 +81,7 @@ class LevelView(arcade.View, TextManagementSystem):
             self.texts["fps"].text = f"FPS: {arcade.get_fps():.0f}"
 
         self.aim_preview_list = update_ball_path_preview(
-            self.level_manager.active_level.peg_list,
+            self.level_manager.active_level.gobjects["peg"],
             self.aim_angle,
             self.shoot_power,
         )
@@ -118,7 +119,7 @@ class LevelView(arcade.View, TextManagementSystem):
         if button == arcade.MOUSE_BUTTON_LEFT and self.aiming:
             self.aiming = False
 
-            if len(self.level_manager.active_level.ball_list) < 3:
+            if len(self.level_manager.active_level.gobjects["ball"]) < 3:
                 Ball.shoot(
                     self.level_manager.active_level, self.aim_angle, self.shoot_power
                 )

@@ -5,7 +5,7 @@ from ..settings import GameSettings
 
 
 class MapNode:
-    def __init__(self, level_index, x, y, radius=20):
+    def __init__(self, level_index, x, y, radius=20, **data):
         self.level_index = level_index
         self.x = x
         self.y = y

@@ -20,3 +20,13 @@ class MovingBody:
             self.body.position = self.movement_function(self.time)
         self.center_x = self.body.position.x
         self.center_y = self.body.position.y
+
+class CollidableNonPhysicsBody:
+    def __init__(self, x, y, shape=None, movement_function=None):
+        self.body = pymunk.Body(body_type=pymunk.Body.STATIC)
+        self.body.position = x, y
+        self.shape = shape
+        self.movement_function = movement_function
+        self.time = 0
+        
+        

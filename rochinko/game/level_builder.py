@@ -134,3 +134,8 @@ class LevelBuilder:
                 peg = Peg(x, y, movement_function=random_movement)
             pegs.append(peg)
         return pegs
+
+
+class ProceduralLevelBuilder:
+    # TODO: We will also generate obstacles, collectibles, etc.
+    ...
