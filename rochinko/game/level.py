@@ -3,7 +3,7 @@ import arcade
 import logging
 
 from ..settings import MODIFIER_PALETTE, GameSettings
-from .gobjects import Obstacle
+from .gobjects import Obstacle, Ball, Peg, Bin
 from .systems.score import ScoreSystem
 from .systems.modifier import ModifierSystem
 from .systems.collision import CollisionSystem
@@ -28,42 +28,46 @@ class Level(CollisionSystem, ModifierSystem, ScoreSystem):
             "obstacle": arcade.SpriteList(),
         }
 
-        self.__init_bins()
+    def add_gobject(self, gobject, collide=True):
+        gtype = None
+        collision_type = None
+        if isinstance(gobject, Ball):
+            collision_type = 1
+            gtype = "ball"
+        elif isinstance(gobject, Peg):
+            collision_type = 2
+            gtype = "peg"
+        elif isinstance(gobject, Bin):
+            collision_type = 3
+            gtype = "bin"
+        elif isinstance(gobject, Obstacle):
+            collision_type = 4
+            gtype = "obstacle"
+        else:
+            raise ValueError(f"Invalid gtype: {type(gobject)}")
 
-    def __init_bins(self):
-        for i in range(10):
-            bin = Obstacle(
-                int(GameSettings.SCREEN_WIDTH / 10),
-                20,
-                (i + 0.5) * (GameSettings.SCREEN_WIDTH / 10),
-                25,
-            )
-            bin.color = MODIFIER_PALETTE[i % len(MODIFIER_PALETTE)]
-
-            self.add_gobject(bin, gtype="bin", collision_type=3)
-
-    def add_gobject(self, gobject, gtype=None, collision_type=None):
-        if collision_type is not None:
-            assert isinstance(collision_type, int), "collision_type must be an integer"
+        if collide:
+            if gtype is None:
+                raise ValueError(f"Invalid gtype: {type(gobject)}")
             gobject.shape.collision_type = collision_type
             gobject.body.sprite = gobject
             self.space.add(gobject.body, gobject.shape)
 
-        if gtype in self.gobjects:
-            self.gobjects[gtype].append(gobject)
-        else:
-            raise ValueError(f"Unknown gtype: {gtype}")
+        self.gobjects.setdefault(gtype, arcade.SpriteList()).append(gobject)
 
-    def add_gobjects(self, gobjects, gtype=None, collision_type=None):
+    def add_gobjects(self, gobjects, collide=False):
         for p in gobjects:
-            self.add_gobject(p, gtype, collision_type)
+            self.add_gobject(p, collide)
 
     def draw(self):
         for sprite_list in self.gobjects.values():
             sprite_list.draw()
 
     def on_update(self, delta_time):
+        # Game physics update
         for _ in range(GameSettings.SPACE_STEPS * GameSettings.SPACE_STEP_MULTIPLIER):
             self.space.step(delta_time)
+
+        # Sprite updates
         for sprite_list in self.gobjects.values():
             sprite_list.update(delta_time)

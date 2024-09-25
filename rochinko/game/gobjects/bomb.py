@@ -10,7 +10,7 @@ from .peg import Peg
 
 
 class Bomb(Peg):
-    def __init__(self, x, y, window, movement_function=None):
+    def __init__(self, x, y, window=None, movement_function=None):
         super().__init__(x, y, arcade.color.RED, movement_function)
         self.window = window
         self.max_hit_count = 2

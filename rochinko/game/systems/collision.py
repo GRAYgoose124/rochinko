@@ -6,6 +6,9 @@ class CollisionSystem:
         bin_handler = self.space.add_collision_handler(1, 3)  # 3 for bins
         bin_handler.begin = self.handle_bin_collision
 
+        obstacle_handler = self.space.add_collision_handler(1, 4)  # 4 for obstacles
+        obstacle_handler.begin = self.handle_obstacle_collision
+
     def handle_peg_collision(self, arbiter, space, data):
         ball_shape = arbiter.shapes[0]
         peg_shape = arbiter.shapes[1]
@@ -23,4 +26,7 @@ class CollisionSystem:
         self.trigger_bin_effect(ball, bin_sprite, delayed=True)
         ball.remove_from_sprite_lists()
 
+        return True
+
+    def handle_obstacle_collision(self, arbiter, space, data):
         return True

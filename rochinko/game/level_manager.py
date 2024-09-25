@@ -32,12 +32,8 @@ class LevelManager(ScoreSystem):
         self.active_level.setup_collision_handlers()
 
     def load_level(self, level_idx):
-        new_level = Level()
         if level_idx < len(self.level_builders):
-            pegs = self.level_builders[level_idx](self.window)
-            new_level.add_gobjects(pegs, gtype="peg", collision_type=2)
             log.info(f"Loaded level {level_idx}")
+            return self.level_builders[level_idx](self.window)
         else:
             log.info("No more levels available")
-
-        return new_level

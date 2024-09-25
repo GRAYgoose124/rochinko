@@ -2,21 +2,12 @@ import arcade
 import random
 import math
 
-from ..settings import GameSettings
-from .gobjects import Peg, Bomb
+from ..settings import GameSettings, MODIFIER_PALETTE
+from .gobjects import Peg, Bomb, Obstacle, Bin
+from .level import Level
 
 
-class LevelBuilder:
-    @staticmethod
-    def all_builders():
-        return [
-            LevelBuilder.create_triangle_pattern,
-            LevelBuilder.create_diamond_pattern,
-            LevelBuilder.create_circular_pattern,
-            LevelBuilder.create_spiral_pattern,
-            LevelBuilder.create_random_pattern,
-        ]
-
+class PatternBuilder:
     @staticmethod
     def create_triangle_pattern(window):
         pegs = arcade.SpriteList()
@@ -134,6 +125,84 @@ class LevelBuilder:
                 peg = Peg(x, y, movement_function=random_movement)
             pegs.append(peg)
         return pegs
+
+
+class LevelBuilder:
+    @staticmethod
+    def all_builders():
+        return [
+            LevelBuilder.create_triangle_level,
+            LevelBuilder.create_diamond_level,
+            LevelBuilder.create_circular_level,
+            LevelBuilder.create_spiral_level,
+            LevelBuilder.create_random_level,
+        ]
+
+    @staticmethod
+    def create_level(pattern_func, window):
+        level = Level()
+
+        # Add pegs
+        pegs = pattern_func(window)
+        level.add_gobjects(pegs, "peg")
+
+        # Add bins
+        bins = LevelBuilder.create_bins()
+        level.add_gobjects(bins, "bin")
+
+        # Add obstacles
+        obstacles = LevelBuilder.create_obstacles()
+        level.add_gobjects(obstacles, "obstacle")
+
+        return level
+
+    @staticmethod
+    def create_bins():
+        bins = []
+        for i in range(10):
+            bin = Bin(
+                int(GameSettings.SCREEN_WIDTH / 10),
+                20,
+                (i + 0.5) * (GameSettings.SCREEN_WIDTH / 10),
+                25,
+            )
+            bin.color = MODIFIER_PALETTE[i % len(MODIFIER_PALETTE)]
+            bins.append(bin)
+        return bins
+
+    @staticmethod
+    def create_obstacles():
+        obstacles = []
+        for _ in range(3):
+            x = random.randint(0, GameSettings.SCREEN_WIDTH)
+            y = random.randint(
+                GameSettings.SCREEN_HEIGHT // 2, GameSettings.SCREEN_HEIGHT
+            )
+            width = random.randint(50, 150)
+            height = random.randint(10, 30)
+            obstacle = Obstacle(width, height, x, y)
+            obstacles.append(obstacle)
+        return obstacles
+
+    @staticmethod
+    def create_triangle_level(window):
+        return LevelBuilder.create_level(PatternBuilder.create_triangle_pattern, window)
+
+    @staticmethod
+    def create_diamond_level(window):
+        return LevelBuilder.create_level(PatternBuilder.create_diamond_pattern, window)
+
+    @staticmethod
+    def create_circular_level(window):
+        return LevelBuilder.create_level(PatternBuilder.create_circular_pattern, window)
+
+    @staticmethod
+    def create_spiral_level(window):
+        return LevelBuilder.create_level(PatternBuilder.create_spiral_pattern, window)
+
+    @staticmethod
+    def create_random_level(window):
+        return LevelBuilder.create_level(PatternBuilder.create_random_pattern, window)
 
 
 class ProceduralLevelBuilder:

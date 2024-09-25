@@ -46,7 +46,7 @@ class Ball(arcade.SpriteCircle):
             math.sin(aim_angle) * (shoot_power),
         )
 
-        level.add_gobject(ball, gtype="ball", collision_type=1)
+        level.add_gobject(ball)
 
         if len(level.pending_modifiers) > 0:
             level.apply_modifier(ball, level.pending_modifiers.pop(0))
